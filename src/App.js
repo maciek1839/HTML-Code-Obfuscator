@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Button, Icon, Tabs, Tab, Row, Input, Collapsible, CollapsibleItem } from 'react-materialize';
+import { Card, CardTitle, Button, Icon, Tabs, Tab, Row, Input, Collapsible, CollapsibleItem } from 'react-materialize';
 
 class App extends Component {
 
@@ -51,7 +51,10 @@ class App extends Component {
         algorithmDetails: null,
         htmlType: null,
         userCustomFile: null,
-        openInNewBrowserTab: false
+        openInNewBrowserTab: false,
+        disablePreview: true,
+        previewHtml: '',
+        htmlDeobfuscator: null
       }
     };
 
@@ -72,10 +75,26 @@ class App extends Component {
     let uConfig = { ...this.state.userConfiguration }
     uConfig.htmlType = event.target.value;
     this.setState({ userConfiguration: uConfig });
+    this.renderPreview(uConfig.htmlType);
   }
 
   handleSubmit(event) {
-    //process
+    switch (this.state.userConfiguration.algorithmType) {
+      case '2':
+        let escapedHtml = escape(this.state.userConfiguration.previewHtml);
+        console.log(escapedHtml);
+        let unescapedHtml = unescape(escapedHtml);
+        console.log(unescapedHtml);
+        let codeToPlaceOnWebsite =
+          `<script>
+document.write(unescape('${escapedHtml}')) 
+</script>`
+        let uConfig = { ...this.state.userConfiguration };
+        uConfig.htmlDeobfuscator = codeToPlaceOnWebsite;
+        this.setState({ userConfiguration: uConfig });
+        break;
+    }
+
   }
 
   handleUserFile(event) {
@@ -92,7 +111,46 @@ class App extends Component {
     this.setState({ userConfiguration: uConfig });
   }
 
+  renderPreview(type) {
+    switch (type) {
+      case 'default':
+        let template = this.loadTemplate();
+        this.setPreviewHtml(template);
+        this.enablePreview();
+        break;
+      case 'custom':
+
+        this.enablePreview();
+        break;
+    }
+  }
+
+  enablePreview() {
+    let userConfiguration = { ...this.state.userConfiguration };
+    userConfiguration.disablePreview = false;
+    this.setState({ userConfiguration: userConfiguration });
+  }
+
+  setPreviewHtml(html) {
+    let uConfig = { ...this.state.userConfiguration };
+    uConfig.previewHtml = html;
+    this.setState({ userConfiguration: uConfig });
+  }
+
+  loadTemplate() {
+    let loadedTemplate = null;
+    let file = 'html-templates/example.html';
+    let request = new XMLHttpRequest();
+    request.open("GET", file, false);
+    request.send(null);
+    if (request.status === 200) {
+      loadedTemplate = request.responseText;
+    }
+    return loadedTemplate;
+  }
+
   render() {
+    let disablePreview = this.state.userConfiguration.disablePreview;
     return (
       <div>
         <header className="App">
@@ -133,8 +191,8 @@ class App extends Component {
               </Row> : null}
               <h3>Open in a new browser tab?</h3>
               <Row>
-                <Input name='result-place' type='radio' value={true} label='Yes' checked={this.state.userConfiguration.openInNewBrowserTab==true} onClick={this.handleOpenInNewBrowserTab}/>
-                <Input name='result-place' type='radio' value={false} label='No*' checked={this.state.userConfiguration.openInNewBrowserTab==false} onClick={this.handleOpenInNewBrowserTab} />
+                <Input name='result-place' type='radio' value={true} label='Yes' checked={this.state.userConfiguration.openInNewBrowserTab == true} onClick={this.handleOpenInNewBrowserTab} />
+                <Input name='result-place' type='radio' value={false} label='No*' checked={this.state.userConfiguration.openInNewBrowserTab == false} onClick={this.handleOpenInNewBrowserTab} />
               </Row>
               * The reulst will be shown in a new tab 'Result'.
             <div className="center-align">
@@ -142,21 +200,15 @@ class App extends Component {
               </div>
             </Row>
           </Tab>
-          <Tab title="HTML Preview">
-            <header className="App-header">
-              <img src={logo} className="App-logo" alt="logo" />
-              <p>
-                Edit <code>src/App.js</code> and save to reload.
-          </p>
-              <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Learn React
-          </a>
-            </header>
+          <Tab title="HTML Preview" disabled={disablePreview}>
+            <div dangerouslySetInnerHTML={{ __html: this.state.userConfiguration.previewHtml }} />
+          </Tab>
+          <Tab title="Result">
+            <h3>Deobfuscator</h3>
+            <p>Place below script to load your html on webpage.</p>
+            <Card className='small' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+              {this.state.userConfiguration.htmlDeobfuscator}
+            </Card>
           </Tab>
         </Tabs>
       </div>
