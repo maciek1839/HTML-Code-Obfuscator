@@ -64,9 +64,6 @@ class App extends Component {
                         steps: ['To be done...']
                     }
                 }
-            ], htmlTypes: [
-                {id: 'default', value: "Default"},
-                {id: 'custom', value: "Load custom"}
             ],
             previewHtml: null,
             obfuscationConfig: null,
@@ -94,7 +91,6 @@ class App extends Component {
                     <Tab title="Configuration" active={this.state.activeTab == 1}>
                         <ConfigurationForm 
                         algorithms={this.state.algorithms} 
-                        htmlTypes={this.state.htmlTypes} 
                         callbackConfigurationForm={this.processDataFromConfigurationForm}/>
                     </Tab>
                     <Tab title="HTML Preview" active={this.state.activeTab == 2} disabled={!this.state.previewHtml}>

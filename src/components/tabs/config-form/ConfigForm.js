@@ -1,5 +1,6 @@
 import {Button, Collapsible, CollapsibleItem, Icon, Input, Row, Tab} from 'react-materialize';
 import React, {Component} from "react";
+import HtmlType from '../../../enums/HtmlType';
 
 class ConfigurationForm extends Component {
 
@@ -36,7 +37,8 @@ class ConfigurationForm extends Component {
 
     handleSubmit(event) {
         let htmlContent=null;
-        if (this.state.htmlType == 'default'){
+        let htmltypeKey=Object.keys(HtmlType).find(key => HtmlType[key]===HtmlType.default);
+        if (this.state.htmlType == htmltypeKey){
             htmlContent = this.loadTemplate();
         } else {
             htmlContent=this.state.customHtml;
@@ -59,6 +61,14 @@ class ConfigurationForm extends Component {
         }
         return loadedTemplate;
     }
+
+    renderHtmlTypesList = () => {
+        let list = [];
+        for (const htmlKey of Object.keys(HtmlType)) {
+          list.push(<option key={htmlKey} value={htmlKey}>{HtmlType[htmlKey]}</option>)
+        }
+        return list;
+      }
 
     render() {
         return (
@@ -87,9 +97,7 @@ class ConfigurationForm extends Component {
                         <Input s={12} type='select' label="HTML type" defaultValue=''
                                onChange={this.handleChangeHtmlType}>
                             <option value="" disabled>Choose HTML</option>
-                            {this.props.htmlTypes.map(type =>
-                                <option key={type.id} value={type.id}>{type.value}</option>
-                            )}
+                            {this.renderHtmlTypesList()}
                         </Input>
                     </Row>
                     {this.state.htmlType === 'custom' ? <Row>
