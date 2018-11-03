@@ -1,64 +1,66 @@
-import { Card, Tab, Input, Row } from "react-materialize";
 import React, { Component } from "react";
 import htmlBeautify from 'html-beautify'
-import ContentEditable from 'react-contenteditable'
 
 class ObfuscationOutput extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            html:'',
-            result:null
+            html: htmlBeautify(props.config.html),
+            result: this.processHtml(htmlBeautify(props.config.html))
         };
     }
 
     handleChange = evt => {
-        let changedHtml=evt.target.value;
-        this.setState({result: this.processHtml(changedHtml)});
-      };
+        let changedHtml = evt.target.value;
+        this.setState({
+            result: this.processHtml(changedHtml),
+            html: changedHtml
+        });
+    };
 
-    processHtml(html){
-        let result=null;
+    processHtml(html) {
+        let result = null;
         switch (this.props.config.algorithm.value) {
-                        case '3':
-                            let escapedHtml = escape(html);
-                            console.log(escapedHtml);
-                            let unescapedHtml = unescape(escapedHtml);
-                            console.log(unescapedHtml);
-                            result =
-                                `
+            case '3':
+                let escapedHtml = escape(html);
+                // console.log(escapedHtml);
+                // let unescapedHtml = unescape(escapedHtml);
+                // console.log(unescapedHtml);
+                result =
+                    `
             document.write(unescape('${escapedHtml}'))
             `
-                            break;
-                    }
+                break;
+            default:
+                console.warning("Not implemented method for obfuscation algorithm!");
+        }
         return result;
-    }   
+    }
+
+    onClickTextarea(e) {
+        this.setState({ html: this.state.html + " " })
+    }
 
     render() {
-        let config = this.props.config;
         return (
             <div>
                 <h3>Deobfuscator</h3>
-                {config ? <div className={"row"}>
+                <div className={"row"}>
                     <div className={"col s6"}><h4>HTML</h4></div>
                     <div className={"col s6"}><h4>Javascript</h4></div>
-                    <div className={"col s6"} >
-                    <Row>
-                        <Input type='textarea' 
-                        style={{ whiteSpace: 'pre-wrap'}} 
-                        defaultValue={htmlBeautify(config.html)} 
-                        onChange={this.handleChange}/>
-                    </Row>
-                    {/* htmlBeautify(config.html) */}
+                    <div className={"col s6"} style={{ height: '280px' }} >
+                        <textarea
+                            suppressContentEditableWarning={true}
+                            contentEditable={true}
+                            style={{ whiteSpace: 'pre-wrap', height: '100%' }}
+                            onChange={this.handleChange}>
+                            {this.state.html}
+                        </textarea>
                     </div>
-                    {/* <div className={"col s6"} 
-                    suppressContentEditableWarning={true} 
-                    contentEditable={true}
-                    style={{ whiteSpace: 'pre-wrap' }}>{htmlBeautify(config.html)}</div> */}
                     <div className={"col s6"}
-                    style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{this.state.result}</div>
-                </div> : null}
+                        style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{this.state.result}</div>
+                </div>
             </div>
         );
     }

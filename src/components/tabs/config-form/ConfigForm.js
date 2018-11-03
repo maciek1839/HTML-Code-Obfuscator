@@ -1,4 +1,4 @@
-import {Button, Collapsible, CollapsibleItem, Icon, Input, Row, Tab} from 'react-materialize';
+import {Button, Collapsible, CollapsibleItem, Icon, Input, Row} from 'react-materialize';
 import React, {Component} from "react";
 import HtmlType from '../../../enums/HtmlType';
 
@@ -36,9 +36,10 @@ class ConfigurationForm extends Component {
     }
 
     handleSubmit(event) {
+        event.preventDefault();
         let htmlContent=null;
         let htmltypeKey=Object.keys(HtmlType).find(key => HtmlType[key]===HtmlType.default);
-        if (this.state.htmlType == htmltypeKey){
+        if (this.state.htmlType === htmltypeKey){
             htmlContent = this.loadTemplate();
         } else {
             htmlContent=this.state.customHtml;
@@ -104,7 +105,7 @@ class ConfigurationForm extends Component {
                         <Input type="file" label="File" onChange={this.handleUserFile}/>
                     </Row> : null}
                     <div className="center-align">
-                        <Button type="submit" onClick={this.handleSubmit}>Process<Icon
+                        <Button type={"button"} onClick={this.handleSubmit}>Process<Icon
                             left>autorenew</Icon></Button>
                     </div>
                 </Row>

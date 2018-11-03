@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import './App.css';
-import {Button, Card, Collapsible, CollapsibleItem, Icon, Input, Row, Tab, Tabs} from 'react-materialize';
+import {Tab, Tabs} from 'react-materialize';
 import ConfigurationForm from "./components/tabs/config-form/ConfigForm";
 import HTMLPreview from "./components/tabs/preview/HTMLPreview";
 import ObfuscationOutput from "./components/tabs/obfuscation-output/ObfuscationOutput";
-import htmlBeautify from 'html-beautify'
 
 class App extends Component {
 
@@ -88,21 +87,30 @@ class App extends Component {
                     <h1>HTML obfuscator</h1>
                 </header>
                 <Tabs>
-                    <Tab title="Configuration" active={this.state.activeTab == 1}>
+                    <Tab title="Configuration" active={this.state.activeTab === 1}>
                         <ConfigurationForm 
-                        algorithms={this.state.algorithms} 
+                        algorithms={this.state.algorithms}
+                        config={this.state.obfuscationConfig} 
                         callbackConfigurationForm={this.processDataFromConfigurationForm}/>
                     </Tab>
-                    <Tab title="HTML Preview" active={this.state.activeTab == 2} disabled={!this.state.previewHtml}>
+                    <Tab title="HTML Preview" active={this.state.activeTab === 2} disabled={!this.state.previewHtml}>
                         <HTMLPreview previewHtml={this.state.previewHtml}/>
                     </Tab>
-                    <Tab title="Result" active={this.state.activeTab == 3} disabled={!this.state.obfuscationConfig}>
-                        <ObfuscationOutput config={this.state.obfuscationConfig}/>
+                    <Tab title="Result" active={this.state.activeTab === 3} disabled={!this.state.obfuscationConfig}>
+                        {this.state.obfuscationConfig?<ObfuscationOutput config={this.state.obfuscationConfig}/>:null}
                     </Tab>
                 </Tabs>
             </div>
         );
     }
+
+    // shouldComponentUpdate(nextProps, nextState){
+    //     console.log("1");
+    //     console.log(this.state);
+    //     console.log("2");
+    //     console.log(nextState);
+    //     return true;//!equals(nextProps, this.props); // equals() is your implementation
+    //  }
     //react methods
     // shouldComponentUpdate() {
     //     return false;
