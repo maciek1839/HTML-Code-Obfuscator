@@ -31,6 +31,7 @@ class ConfigurationForm extends Component {
     handleUserFile(event) {
         let file = event.target.files[0];
         this.setState({customHtml: file});
+        this.props.callbackConfigurationFormPreview(file);
     }
 
     handleSubmit(event) {
@@ -45,22 +46,6 @@ class ConfigurationForm extends Component {
             html:htmlContent
         };
         this.props.callbackConfigurationForm(config);
-//         switch (this.state.userConfiguration.algorithmType) {
-//             case '2':
-//                 let escapedHtml = escape(this.state.userConfiguration.previewHtml);
-//                 console.log(escapedHtml);
-//                 let unescapedHtml = unescape(escapedHtml);
-//                 console.log(unescapedHtml);
-//                 let codeToPlaceOnWebsite =
-//                     `<script>
-// document.write(unescape('${escapedHtml}'))
-// </script>`
-//                 let uConfig = {...this.state.userConfiguration};
-//                 uConfig.htmlDeobfuscator = codeToPlaceOnWebsite;
-//                 this.setState({userConfiguration: uConfig});
-//                 break;
-//         }
-
     }
 
     loadTemplate() {

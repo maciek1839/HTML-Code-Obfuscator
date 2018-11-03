@@ -79,7 +79,8 @@ class App extends Component {
         this.setState({
             obfuscationConfig: config,
             doObfuscation: true,
-            activeTab:3
+            activeTab:3,
+            previewHtml: config.html
         });
     }
     
@@ -91,7 +92,10 @@ class App extends Component {
                 </header>
                 <Tabs>
                     <Tab title="Configuration" active={this.state.activeTab == 1}>
-                        <ConfigurationForm algorithms={this.state.algorithms} htmlTypes={this.state.htmlTypes} callbackConfigurationForm={this.processDataFromConfigurationForm}/>
+                        <ConfigurationForm 
+                        algorithms={this.state.algorithms} 
+                        htmlTypes={this.state.htmlTypes} 
+                        callbackConfigurationForm={this.processDataFromConfigurationForm}/>
                     </Tab>
                     <Tab title="HTML Preview" active={this.state.activeTab == 2} disabled={!this.state.previewHtml}>
                         <HTMLPreview previewHtml={this.state.previewHtml}/>

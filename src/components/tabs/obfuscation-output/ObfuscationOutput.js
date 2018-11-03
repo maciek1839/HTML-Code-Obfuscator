@@ -11,6 +11,23 @@ class ObfuscationOutput extends Component {
         };
     }
 
+    processHtml(){
+        let result=null;
+        switch (this.props.config.algorithm.value) {
+                        case '3':
+                            let escapedHtml = escape(this.props.config.html);
+                            console.log(escapedHtml);
+                            let unescapedHtml = unescape(escapedHtml);
+                            console.log(unescapedHtml);
+                            result =
+                                `
+            document.write(unescape('${escapedHtml}'))
+            `
+                            break;
+                    }
+        return result;
+    }   
+
     render() {
         let config = this.props.config;
         return (
@@ -23,7 +40,8 @@ class ObfuscationOutput extends Component {
                     suppressContentEditableWarning={true} 
                     contentEditable={true}
                     style={{ whiteSpace: 'pre-wrap' }}>{htmlBeautify(config.html)}</div>
-                    <div className={"col s6"}>xxxx1xxxxx xxx</div>
+                    <div className={"col s6"}
+                    style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{this.processHtml()}</div>
                 </div> : null}
             </div>
         );
