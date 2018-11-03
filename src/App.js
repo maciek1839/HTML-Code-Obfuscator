@@ -4,7 +4,7 @@ import {Button, Card, Collapsible, CollapsibleItem, Icon, Input, Row, Tab, Tabs}
 import ConfigurationForm from "./components/tabs/config-form/ConfigForm";
 import HTMLPreview from "./components/tabs/preview/HTMLPreview";
 import ObfuscationOutput from "./components/tabs/obfuscation-output/ObfuscationOutput";
-// import Testss from './test'
+import htmlBeautify from 'html-beautify'
 
 class App extends Component {
 
