@@ -33,7 +33,7 @@ class ObfuscationOutput extends Component {
             `
                 break;
             default:
-                console.warning("Not implemented method for obfuscation algorithm!");
+                console.log("Not implemented method for obfuscation algorithm!");
         }
         return result;
     }

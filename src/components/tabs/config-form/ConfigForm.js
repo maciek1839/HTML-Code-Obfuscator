@@ -1,6 +1,7 @@
 import {Button, Collapsible, CollapsibleItem, Icon, Input, Row} from 'react-materialize';
 import React, {Component} from "react";
 import HtmlType from '../../../enums/HtmlType';
+import Actions from '../../../redux/actions/Actions';
 
 class ConfigurationForm extends Component {
 
@@ -21,7 +22,8 @@ class ConfigurationForm extends Component {
     handleChangeAlgorithms(event) {
         let algorithmName=event.target.value;
         let newChoosenAlgorithm = this.props.algorithms.filter(e => e.value === algorithmName)[0];
-        this.setState({choosenAlgorithm: newChoosenAlgorithm});
+        this.props.callbackProcessAction(Actions.setAlgorithm(newChoosenAlgorithm));
+        // this.setState({choosenAlgorithm: newChoosenAlgorithm});
     }
 
     handleChangeHtmlType(event) {
@@ -48,7 +50,8 @@ class ConfigurationForm extends Component {
             algorithm:this.state.choosenAlgorithm,
             html:htmlContent
         };
-        this.props.callbackConfigurationForm(config);
+        // this.props.callbackConfigurationForm(config);
+        
     }
 
     loadTemplate() {
