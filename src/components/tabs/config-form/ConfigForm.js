@@ -1,6 +1,7 @@
-import {Button, Collapsible, CollapsibleItem, Icon, Input, Row} from 'react-materialize';
+import {Button, Collapsible, CollapsibleItem, Icon, Input, Row, Modal} from 'react-materialize';
 import React, {Component} from "react";
 import HtmlType from '../../../enums/HtmlType';
+import generateHTML from '../../services/HTMLGeneratorService';
 
 class ConfigurationForm extends Component {
 
@@ -9,13 +10,23 @@ class ConfigurationForm extends Component {
         this.state = {
             choosenAlgorithm: null,
             htmlType: null,
-            customHtml:null
+            customHtml:null,
+            isOpenModal: false,
+            generatedHTMlConfig:{
+                headers: 1,
+                paragraphs:1,
+                buttons:1,
+                links:1,
+                inputs:1,
+                images:1
+            }
         };
 
         this.handleChangeAlgorithms = this.handleChangeAlgorithms.bind(this);
         this.handleChangeHtmlType = this.handleChangeHtmlType.bind(this);
         this.handleUserFile = this.handleUserFile.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.changeHeaders = this.changeHeaders.bind(this);
     }
     
     handleChangeAlgorithms(event) {
@@ -25,8 +36,14 @@ class ConfigurationForm extends Component {
     }
 
     handleChangeHtmlType(event) {
+       
         let newHtmlType = event.target.value;
-        this.setState({htmlType: newHtmlType});
+        console.log(newHtmlType);
+        if(newHtmlType === 'default'){
+            this.setState({isOpenModal: true});
+        } else {
+            this.setState({htmlType: newHtmlType});
+        }
     }
 
     handleUserFile(event) {
@@ -39,15 +56,19 @@ class ConfigurationForm extends Component {
         event.preventDefault();
         let htmlContent=null;
         let htmltypeKey=Object.keys(HtmlType).find(key => HtmlType[key]===HtmlType.default);
-        if (this.state.htmlType === htmltypeKey){
-            htmlContent = this.loadTemplate();
-        } else {
-            htmlContent=this.state.customHtml;
-        }
+        console.log(htmltypeKey);
+        // if (this.state.htmlType === 'default'){
+            // htmlContent = this.loadTemplate();
+            htmlContent=generateHTML(this.state.generatedHTMlConfig);
+            console.log(htmlContent);
+        // } else {
+        //     htmlContent=this.state.customHtml;
+        // }
         let config = {
             algorithm:this.state.choosenAlgorithm,
             html:htmlContent
         };
+        console.log(config);
         this.props.callbackConfigurationForm(config);
     }
 
@@ -71,9 +92,62 @@ class ConfigurationForm extends Component {
         return list;
       }
 
+    generateHTMLFromPopup(){
+        this.setState({isOpenModal: false});
+    }
+
+    changeHeaders(event, type){
+        console.log(type); 
+        console.log(event.target.value);
+        let prevConfig = {...this.state.generatedHTMlConfig};
+        switch(type){
+            case 'Headers':
+                prevConfig.headers= event.target.value;
+                this.setState({generatedHTMlConfig: prevConfig});
+            break;
+            case 'Paragraphs':
+                prevConfig.paragraphs= event.target.value;
+                this.setState({generatedHTMlConfig: prevConfig});
+            break;
+            case 'Buttons':
+            prevConfig.buttons= event.target.value;
+            this.setState({generatedHTMlConfig: prevConfig});
+            break;
+            case 'Links':
+            prevConfig.links= event.target.value;
+            this.setState({generatedHTMlConfig: prevConfig});
+            break;
+            case 'Inputs':
+            prevConfig.inputs= event.target.value;
+            this.setState({generatedHTMlConfig: prevConfig});
+            break;
+            case 'Images':
+            prevConfig.images= event.target.value;
+            this.setState({generatedHTMlConfig: prevConfig});
+            break;
+        }
+    }
+
     render() {
         return (
                 <Row>
+                    {/* todo 12.11.2018 extract to another component! */}
+                    <Modal open={this.state.isOpenModal} header='Generate Html'
+                     actions={
+                        <div>
+                          <Button modal="close" waves="light" className="red lighten-2">Cancel</Button> 
+                          <Button modal="close" waves="light" className="blue" onClick={ this.generateHTMLFromPopup.bind(this) }><Icon left>build</Icon>Generate</Button>
+                        </div>
+                      }
+                    >
+                        <p>Choose HTML elements for generated HTML.</p> 
+                        <Input type='number' label='Headers' value ={this.state.generatedHTMlConfig.headers} onChange={e=>this.changeHeaders(e,'Headers')}/>
+                        <Input type='number' label='Paragraphs' value ={this.state.generatedHTMlConfig.paragraphs} onChange={e=>this.changeHeaders(e,'Paragraphs')}/>
+                        <Input type='number' label='Buttons' value ={this.state.generatedHTMlConfig.buttons} onChange={e=>this.changeHeaders(e,'Buttons')}/>
+                        <Input type='number' label='Links' value ={this.state.generatedHTMlConfig.links} onChange={e=>this.changeHeaders(e,'Links')}/>
+                        <Input type='number' label='Inputs' value ={this.state.generatedHTMlConfig.inputs} onChange={e=>this.changeHeaders(e,'Inputs')}/>
+                        <Input type='number' label='Images' value ={this.state.generatedHTMlConfig.images} onChange={e=>this.changeHeaders(e,'Images')}/>
+                    </Modal>
                     <h2>Algorithm</h2>
                     <Row>
                         <Input s={12} type='select' label="Select algorithm" defaultValue=''
