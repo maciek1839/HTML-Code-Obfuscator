@@ -10,14 +10,13 @@ class HTMLPreview extends Component {
 
     componentDidUpdate() {
         if (this.props.previewHtml && this.props.previewHtml !== '') {
-            this.refs.test.innerHTML = this.props.previewHtml;
+            this.refs.preview.innerHTML = this.props.previewHtml;
         }
     }
 
     render() {
-        let htmlContent = this.props.previewHtml;
         return (
-            <div ref='test'></div>
+            <div ref='preview'></div>
         );
     }
 }

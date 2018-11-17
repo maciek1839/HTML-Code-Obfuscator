@@ -17,7 +17,7 @@ export function prepareHtmlConfig(
 
 export function generateHTML(config) {
     let result = getOpeningTag();
-    config.map(e => {
+    config.forEach(e => {
         switch (e.type) {
             case 'header':
                 for (let i = e.value; i > 0; i--) {

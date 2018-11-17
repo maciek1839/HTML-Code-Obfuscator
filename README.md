@@ -22,7 +22,7 @@ An academic project based on ReactJS and Redux (any external library wasn't used
 
 ## Application flow
 
-![Redux](./docs/redux.png "Redux concept")
+![Redux](./docs/redux.png =100x250 "Redux concept")
 
 ### Links
 [reactstrap library](https://reactstrap.github.io/components)

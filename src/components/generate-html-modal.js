@@ -33,7 +33,6 @@ class GenerateHtmlModal extends Component {
     }
 
     change(event, type) {
-        let prevConfig = { ...this.state };
         switch (type) {
             case 'Headers':
                 this.setState({ headers: event.target.value });

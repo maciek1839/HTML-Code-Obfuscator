@@ -23,8 +23,7 @@ class ObfuscationOutput extends Component {
     };
 
     componentDidUpdate() {
-        if (this.props.config != null && this.state.html == '') {
-            console.log("ss");
+        if (this.props.config !== null && this.state.html === '') {
             this.setState({
                 html: htmlBeautify(this.props.config.html),
                 result: this.processHtml(this.props.config.html)
@@ -34,7 +33,6 @@ class ObfuscationOutput extends Component {
 
     processHtml(html) {
         let result = null;
-        console.log(this.props.config);
         switch (this.props.config.choosenAlgorithm.value) {
             case '3':
                 let escapedHtml = escape(html);
@@ -57,7 +55,6 @@ class ObfuscationOutput extends Component {
     }
 
     render() {
-        console.log(this.props.config);
         return (
             <div>
                 <Container>
