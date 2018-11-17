@@ -8,10 +8,16 @@ class HTMLPreview extends Component {
         this.state = {};
     }
 
+    componentDidUpdate() {
+        if (this.props.previewHtml && this.props.previewHtml !== '') {
+            this.refs.test.innerHTML = this.props.previewHtml;
+        }
+    }
+
     render() {
         let htmlContent = this.props.previewHtml;
         return (
-            <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+            <div ref='test'></div>
         );
     }
 }

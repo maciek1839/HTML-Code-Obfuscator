@@ -1,120 +1,143 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './App.css';
-import {Tab, Tabs} from 'react-materialize';
-import ConfigurationForm from "./components/tabs/config-form/ConfigForm";
-import HTMLPreview from "./components/tabs/preview/HTMLPreview";
-import ObfuscationOutput from "./components/tabs/obfuscation-output/ObfuscationOutput";
+import 'bootstrap/dist/css/bootstrap.css';
+import { Container, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col } from 'reactstrap';
+import classnames from 'classnames';
+import ConfigurationForm from "./components/config-form";
+import HTMLPreview from "./components/html-preview";
+import ObfuscationOutput from "./components/obfuscation-output";
+import { algorithmReducer, htmlTypeReducer, htmlTypeFileReducer, showResultReducer } from "./reducers/config-form-reducer";
+import { getInitialState } from "./model/app-initial-state"
+import { ConfigFormActions } from "./actions/config-form"
+import { GenerateHtmlModalActions } from "./actions/generate-html-modal-action";
+import { closeModalReducer, generateHtmlReducer } from './reducers/generate-html-modal';
 
 class App extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            //export to enum
-            algorithms: [
-                {
-                    name: 'Html to Javascript',
-                    value: '1',
-                    details: {
-                        steps: [
-                            'Split HTML file line by line.',
-                            'Replace white characters.',
-                            'Create function which add lines to document using document.write function.']
-                    }
-                },
-                {
-                    name: 'Html to Unicode characters',
-                    value: '2',
-                    details: {
-                        steps: [
-                            'Create js function encoding characters to Unicode characters.',
-                            'Create decoding function.',
-                            'Add output from decoding function to HTML.'
-                        ]
-                    }
-                },
-                {
-                    name: 'Html to escape characters',
-                    value: '3',
-                    details: {
-                        steps: [
-                            'Change endcoding using escape javascript function.',
-                            'Decode using unescape javascript function.',
-                            'Add element to HTML.'
-                        ]
-                    }
-                },
-                {
-                    name: 'Using own encoding and decoding function. [NOT IMPLEMENTED YET]',
-                    value: '4',
-                    details: {
-                        steps: [
-                            'Encode HTML using own function.',
-                            'Save encoded content into js variable.',
-                            'Decode using own decoding function.',
-                            'Add element to HTML document.'
-                        ]
-                    }
-                },
-                {
-                    name: 'Combine above methods [NOT IMPLEMENTED YET]',
-                    value: '5',
-                    details: {
-                        steps: ['To be done...']
-                    }
-                }
-            ],
-            previewHtml: null,
-            obfuscationConfig: null,
-            activeTab:1
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = getInitialState();
+  }
 
-    processDataFromConfigurationForm = (config)=>{
-        console.info(config);
-        this.setState({
-            obfuscationConfig: config,
-            doObfuscation: true,
-            activeTab:3,
-            previewHtml: config.html
-        });
+  myGlobalReducer(action) {
+    let newState = null;
+    switch (action.type) {
+      case ConfigFormActions.SET_ALGORITHM:
+        newState = algorithmReducer(this.state, action.payload);
+        this.setState(newState);
+        break;
+      case ConfigFormActions.SET_HTML_TYPE:
+        newState = htmlTypeReducer(this.state, action.payload);
+        this.setState(newState);
+        break;
+      case ConfigFormActions.SET_HTML_FILE:
+        newState = htmlTypeFileReducer(this.state, action.payload);
+        this.setState(newState);
+        break;
+      case GenerateHtmlModalActions.CLOSE_MODAL:
+        newState = closeModalReducer(this.state, action.payload);
+        this.setState(newState);
+        break;
+      case GenerateHtmlModalActions.GENERATE_HTML:
+        newState = generateHtmlReducer(this.state, action.payload);
+        this.setState(newState);
+        break;
+      case ConfigFormActions.SHOW_RESULT:
+        newState = showResultReducer(this.state, action.payload);
+        this.setState(newState);
+        break;
+      default:
+        console.log(`No action type ${action.type} implemented!`);
     }
-    
-    render() {
-        return (
-            <div>
-                <header className="App">
-                    <h1>HTML obfuscator</h1>
-                </header>
-                <Tabs>
-                    <Tab title="Configuration" active={this.state.activeTab === 1}>
-                        <ConfigurationForm 
-                        algorithms={this.state.algorithms}
-                        config={this.state.obfuscationConfig} 
-                        callbackConfigurationForm={this.processDataFromConfigurationForm}/>
-                    </Tab>
-                    <Tab title="HTML Preview" active={this.state.activeTab === 2} disabled={!this.state.previewHtml}>
-                        <HTMLPreview previewHtml={this.state.previewHtml}/>
-                    </Tab>
-                    <Tab title="Result" active={this.state.activeTab === 3} disabled={!this.state.obfuscationConfig}>
-                        {this.state.obfuscationConfig?<ObfuscationOutput config={this.state.obfuscationConfig}/>:null}
-                    </Tab>
-                </Tabs>
-            </div>
-        );
-    }
+  }
 
-    // shouldComponentUpdate(nextProps, nextState){
-    //     console.log("1");
-    //     console.log(this.state);
-    //     console.log("2");
-    //     console.log(nextState);
-    //     return true;//!equals(nextProps, this.props); // equals() is your implementation
-    //  }
-    //react methods
-    // shouldComponentUpdate() {
-    //     return false;
-    // }
+  processDataFromConfigurationForm = (config) => {
+    this.setState({
+      obfuscationConfig: config,
+      doObfuscation: true,
+      activeTab: 3,
+      previewHtml: config.html
+    });
+  }
+
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab
+      });
+    }
+  }
+
+  render() {
+    return (
+      <Container>
+        <div>
+          <header className="App">
+            <h1>HTML obfuscator</h1>
+          </header>
+          <Nav tabs>
+            <NavItem >
+              <NavLink
+                className={classnames({ active: this.state.activeTab === '1' })}
+                onClick={() => { this.toggle('1'); }} href="#"
+              >
+                Configuration
+            </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                className={classnames({ active: this.state.activeTab === '2' })}
+                onClick={() => { this.toggle('2'); }}
+                href="#"
+                disabled={this.state.obfuscationConfig.html ? null : true}
+              >
+                HTML Preview
+            </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                className={classnames({ active: this.state.activeTab === '3' })}
+                onClick={() => { this.toggle('3'); }}
+                href="#"
+                disabled={this.state.outputObfuscationConfig ? null : true}
+              >
+                Result
+            </NavLink>
+            </NavItem>
+          </Nav>
+          <TabContent activeTab={this.state.activeTab}>
+            <TabPane tabId="1">
+              <Row>
+                <Col sm="12">
+                  <ConfigurationForm
+                    algorithms={this.state.algorithms}
+                    config={this.state.obfuscationConfig}
+                    callbackConfigurationForm={this.processDataFromConfigurationForm}
+                    showHtmlTemplateModal={this.state.showHtmlTemplateModal}
+                    callbackProcessAction={e => this.myGlobalReducer(e)}
+                  />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane tabId="2">
+              <Row>
+                <Col sm="12">
+                  <HTMLPreview previewHtml={this.state.obfuscationConfig.html} />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane tabId="3">
+              <Row>
+                <Col sm="12">
+                  <ObfuscationOutput config={this.state.outputObfuscationConfig} />
+                </Col>
+              </Row>
+            </TabPane>
+          </TabContent>
+        </div>
+      </Container>
+    );
+  }
 }
 
 export default App;
