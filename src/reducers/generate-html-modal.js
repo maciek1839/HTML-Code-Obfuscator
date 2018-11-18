@@ -12,6 +12,7 @@ export function generateHtmlReducer(prevState, htmlConfig) {
     console.log('generateHtmlReducer');
     let newState = { ...prevState };
     newState.obfuscationConfig.html = generateHTML(htmlConfig);
+    newState.obfuscationConfig.htmlConfig = htmlConfig;
     newState.showHtmlTemplateModal = false;
     return newState;
 }

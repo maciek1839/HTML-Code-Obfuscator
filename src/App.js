@@ -120,7 +120,7 @@ class App extends Component {
                 <Col sm="12">
                   <HTMLPreview previewHtml={this.state.obfuscationConfig.html} 
                   callbackProcessAction={e => this.myGlobalReducer(e)}
-                  htmlConfig={this.state.obfuscationConfig}
+                  htmlConfig={this.state.obfuscationConfig.htmlConfig}
                   />
                 </Col>
               </Row>
