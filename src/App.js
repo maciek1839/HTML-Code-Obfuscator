@@ -11,6 +11,8 @@ import { getInitialState } from "./model/app-initial-state"
 import { ConfigFormActions } from "./actions/config-form"
 import { GenerateHtmlModalActions } from "./actions/generate-html-modal-action";
 import { closeModalReducer, generateHtmlReducer } from './reducers/generate-html-modal';
+import { PreviewHtmlActions } from './actions/html-preview-actions';
+import { regenerateHtmlReducer } from './reducers/preview-html-reducer';
 
 class App extends Component {
 
@@ -46,18 +48,13 @@ class App extends Component {
         newState = showResultReducer(this.state, action.payload);
         this.setState(newState);
         break;
+      case PreviewHtmlActions.REGENERATE_HTML:
+        newState = regenerateHtmlReducer(this.state, action.payload);
+        this.setState(newState);
+      break;
       default:
         console.log(`No action type ${action.type} implemented!`);
     }
-  }
-
-  processDataFromConfigurationForm = (config) => {
-    this.setState({
-      obfuscationConfig: config,
-      doObfuscation: true,
-      activeTab: 3,
-      previewHtml: config.html
-    });
   }
 
   toggle(tab) {
@@ -112,7 +109,6 @@ class App extends Component {
                   <ConfigurationForm
                     algorithms={this.state.algorithms}
                     config={this.state.obfuscationConfig}
-                    callbackConfigurationForm={this.processDataFromConfigurationForm}
                     showHtmlTemplateModal={this.state.showHtmlTemplateModal}
                     callbackProcessAction={e => this.myGlobalReducer(e)}
                   />
@@ -122,7 +118,10 @@ class App extends Component {
             <TabPane tabId="2">
               <Row>
                 <Col sm="12">
-                  <HTMLPreview previewHtml={this.state.obfuscationConfig.html} />
+                  <HTMLPreview previewHtml={this.state.obfuscationConfig.html} 
+                  callbackProcessAction={e => this.myGlobalReducer(e)}
+                  htmlConfig={this.state.obfuscationConfig}
+                  />
                 </Col>
               </Row>
             </TabPane>

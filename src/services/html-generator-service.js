@@ -15,7 +15,6 @@ export function prepareHtmlConfig(
 }
 
 export function generateHTML(config) {
-    console.log("jestem");
     let result = getOpeningTag();
     // while(!isEmptyConfig(config)){
         let sectionResult=generateSection(config);
@@ -127,11 +126,9 @@ function randomCount(){
 }
 
 function generateSection(config){
-    console.log("jestem2");
     const limit=3;
     let updatedConfig = {...config};
     let tmpConfig = null;
-    console.log(randomCount());
     let headerCount=randomCount()%limit+1;
     let paragraphCount=randomCount()%limit+1;
     let buttonCount=randomCount()%limit+1;
@@ -159,7 +156,6 @@ let isQuiz=false;
 
      let section ="<section>";
         for(;headerCount>0;headerCount--){
-            console.log("jestem3");
             section+=`<h2>${getRandomTitleText()}</h2>`;
             if(paragraphCount>0){
                 let withLink=Math.random() >= 0.5;
@@ -179,7 +175,6 @@ let isQuiz=false;
             isQuiz=true;
             section+="<h5>Quiz!</h5>";
             for(;inputCount>0;inputCount--){
-                    console.log("jestem4");
                     section+=`<label>${getRandomQuestion()}</label>`;
                     section+=getRandomInput();
                     section+="</br>";
@@ -192,7 +187,6 @@ let isQuiz=false;
             section+=getRandomButton();
         }
         for(;paragraphCount>0;paragraphCount--){
-            console.log("jestem4");
             section+="</br>";
             let withLink=Math.random() >= 0.5;
             section+=getRandomParagraph(withLink);
@@ -204,7 +198,6 @@ let isQuiz=false;
         if(!isQuiz){
             section+="<h5>Quiz!</h5>";
             for(;inputCount>0;inputCount--){
-                    console.log("jestem4");
                     section+=`<label>${getRandomQuestion()}</label>`;
                     section+=getRandomInput();
                     section+="</br>";
@@ -268,7 +261,8 @@ function getRandomInput(){
 }
 
 function isEmptyConfig(config){
-    return config.headerCount<=0 && config.paragraphCount<=0 && config.buttonCount<=0 && config.linkCount<=0 && config.inputCount<=0 && config.imageCount<=0;
+    console.log(config.config.headerCount);
+    return config.headerCount<=0 ;//&& config.paragraphCount<=0 && config.inputCount<=0; // && config.buttonCount<=0 && config.linkCount<=0 &&  && config.imageCount<=0;
 }
 
 function getRandomQuestion(){
