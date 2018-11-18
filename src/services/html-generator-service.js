@@ -133,7 +133,7 @@ function getRandomImage(size = null) {
     if (size) {
         url = `https://fakeimg.pl/${size}/`
     } else {
-        size = (Math.floor(Math.random() * 800) + 100) + "x" + (Math.floor(Math.random() * 200) + 100);
+        size = (Math.floor(Math.random() * 400) + 400) + "x" + (Math.floor(Math.random() * 200) + 100);
     }
     url = `https://fakeimg.pl/${size}/?text=${text}&font=${font}`;
     return `<img src="${url}" style="${css}">`;
