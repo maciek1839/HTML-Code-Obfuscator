@@ -22,7 +22,7 @@ class HTMLPreview extends Component {
     render() {
         return (
             <div style={{position: "relative"}}> 
-                {this.props.htmlConfig != null && this.props.htmlConfig.choosenHtml==0 ? <Button style={{position: "absolute",top: "0px",right: "0px"}} color="primary" onClick={this.generateAgain}>Generate again</Button>:null}
+                {this.props.htmlConfig !== null && this.props.htmlConfig.choosenHtml===0 ? <Button style={{position: "absolute",top: "0px",right: "0px"}} color="primary" onClick={this.generateAgain}>Generate again</Button>:null}
                 <div ref='preview'></div>
             </div>
         );
