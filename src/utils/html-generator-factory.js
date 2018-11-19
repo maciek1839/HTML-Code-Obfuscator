@@ -176,8 +176,7 @@ export function generateQuizForm(inputCount) {
 
 export function getOpeningTag() {
     let header = getRandomTitleText();
-    return `
-    <!DOCTYPE html>
+    return `<!DOCTYPE html>
     <html>
         <head>
             <title>Generated HTML example</title>

@@ -1,4 +1,4 @@
-import { getOpeningTag, getClosingTag, generateQuizForm, getRandomImage, getRandomParagraph, getRandomHeader, getRandomBlockQuote, randomCount } from "../utils/HtmlGeneratorFactory";
+import { getOpeningTag, getClosingTag, generateQuizForm, getRandomImage, getRandomParagraph, getRandomHeader, getRandomBlockQuote, randomCount } from "../utils/html-generator-factory";
 
 
 export function prepareHtmlConfig(

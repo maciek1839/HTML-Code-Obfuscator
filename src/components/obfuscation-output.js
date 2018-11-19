@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import htmlBeautify from 'html-beautify'
 import { Row, Input, Col, Container } from 'reactstrap';
+import { fromHex, toHex, toASCII, toHtmlEntities, htmlToJavascript, encodeUsingOwnFunction } from "../services/html-encoder";
 
 
 class ObfuscationOutput extends Component {
@@ -34,15 +35,47 @@ class ObfuscationOutput extends Component {
     processHtml(html) {
         let result = null;
         switch (this.props.config.choosenAlgorithm.value) {
+            case '1':
+                let htmlToJs = htmlToJavascript(html);
+                result =
+                    `
+            document.write(eval('${htmlToJs}'))
+            `
+                break;
+            case '2':
+                let encodedHtml = btoa(unescape(html));
+                result =
+                    `
+            document.write(atob('${encodedHtml}'))
+            `
+                break;
             case '3':
+                let hex = toHex(html);
+                result =
+                    `
+            document.write(fromHex('${hex}'))
+            `;
+                break;
+            case '4':
+                let ascii = toHtmlEntities(html);
+                result =
+                    `
+            document.write(fromHtmlEntities('${ascii}'))
+            `;
+                break;
+            case '5':
                 let escapedHtml = escape(html);
-                // console.log(escapedHtml);
-                // let unescapedHtml = unescape(escapedHtml);
-                // console.log(unescapedHtml);
                 result =
                     `
             document.write(unescape('${escapedHtml}'))
             `
+                break;
+            case '6':
+                let customEncoding = encodeUsingOwnFunction(html);
+                result =
+                    `
+                document.write(ownDecodingFunction('${customEncoding}'))
+                `
                 break;
             default:
                 console.log("Not implemented method for obfuscation algorithm!");

@@ -11,19 +11,41 @@ export function getDefaultAlgorithms() {
             }
         },
         {
-            name: 'Html to Unicode characters',
+            name: 'Html to Base64 characters',
             value: '2',
             details: {
                 steps: [
-                    'Create js function encoding characters to Unicode characters.',
+                    'Create js function encoding characters to Base64 characters.',
                     'Create decoding function.',
                     'Add output from decoding function to HTML.'
                 ]
             }
         },
         {
-            name: 'Html to escape characters',
+            name: 'Html to Hex characters',
             value: '3',
+            details: {
+                steps: [
+                    'Create js function encoding characters to Hex characters.',
+                    'Create decoding function.',
+                    'Add output from decoding function to HTML.'
+                ]
+            }
+        },
+        {
+            name: 'Html to html entities',
+            value: '4',
+            details: {
+                steps: [
+                    'Create js function encoding characters to html codes.',
+                    'Create decoding function.',
+                    'Add output from decoding function to HTML.'
+                ]
+            }
+        },
+        {
+            name: 'Html to escape characters (ASCII)',
+            value: '5',
             details: {
                 steps: [
                     'Change endcoding using escape javascript function.',
@@ -33,8 +55,8 @@ export function getDefaultAlgorithms() {
             }
         },
         {
-            name: 'Using own encoding and decoding function. [NOT IMPLEMENTED YET]',
-            value: '4',
+            name: 'Using own encoding and decoding function.',
+            value: '6',
             details: {
                 steps: [
                     'Encode HTML using own function.',
@@ -42,13 +64,6 @@ export function getDefaultAlgorithms() {
                     'Decode using own decoding function.',
                     'Add element to HTML document.'
                 ]
-            }
-        },
-        {
-            name: 'Combine above methods [NOT IMPLEMENTED YET]',
-            value: '5',
-            details: {
-                steps: ['To be done...']
             }
         }
     ];
