@@ -11,6 +11,7 @@ class ObfuscationOutput extends Component {
         this.state = {
             html: '',
             result: '',
+            config: null,
             readyToEdit: false
         }
     }
@@ -24,12 +25,17 @@ class ObfuscationOutput extends Component {
     };
 
     componentDidUpdate() {
-        if (this.props.config !== null && this.state.html === '') {
+        if (this.props.config !== null && (this.state.html === '' || this.isConfigurationChanged(this.state.config, this.props.config))) {
             this.setState({
                 html: htmlBeautify(this.props.config.html),
-                result: this.processHtml(this.props.config.html)
+                result: this.processHtml(this.props.config.html),
+                config: this.props.config
             });
         }
+    }
+
+    isConfigurationChanged(oldConfig, newConfig){
+        return oldConfig !=null && newConfig != null && (oldConfig.choosenAlgorithm.value != newConfig.choosenAlgorithm.value);
     }
 
     processHtml(html) {
