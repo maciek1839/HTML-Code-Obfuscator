@@ -1,3 +1,5 @@
+import { getGenerateType } from "../model/enums/html-type";
+
 export function algorithmReducer(prevState, valueToUpdate) {
     console.log('AlgorithmReducer');
     let newState = { ...prevState };
@@ -10,7 +12,7 @@ export function htmlTypeReducer(prevState, valueToUpdate) {
     valueToUpdate = Number(valueToUpdate);
     let newState = { ...prevState };
     newState.obfuscationConfig.choosenHtml = valueToUpdate;
-    if (valueToUpdate === 0) {
+    if (valueToUpdate === getGenerateType()) {
         newState.showHtmlTemplateModal = true;
     }
     return newState;

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import HtmlType from '../model/enums/html-type';
+import HtmlType, { getLoadFileType } from '../model/enums/html-type';
 import { setAlgorithm, setHtmlType, setHtmlFile, showResult } from '../actions/config-form';
 import { Collapse, Button, Form, FormGroup, Label, Input, Col, Container, ListGroupItem, ListGroup } from 'reactstrap';
 import GenerateHtmlModal from "./generate-html-modal";
@@ -46,7 +46,7 @@ class ConfigurationForm extends Component {
     renderHtmlTypesList = () => {
         let list = [];
         for (var i = 0; i < HtmlType.length; i++) {
-            let element = HtmlType[i]
+            let element = HtmlType[i];
             list.push(<option key={element.id} value={element.id}>{element.value}</option>)
         }
         return list;
@@ -65,7 +65,7 @@ class ConfigurationForm extends Component {
                 <Form>
                     <FormGroup row></FormGroup>
                     <FormGroup row>
-                        <Label sm={2} for="examplePassword" >Algorithm</Label>
+                        <Label sm={2}>Algorithm</Label>
                         <Col sm={10}>
                             <Input defaultValue={selectedAlgorithm} type="select" name="select" onChange={this.handleChangeAlgorithms}>
                                 <option key={0} value={null}></option>
@@ -89,15 +89,15 @@ class ConfigurationForm extends Component {
                     </FormGroup> : null}
 
                     <FormGroup row>
-                        <Label sm={2} for="examplePassword" >HTML to obfuscate</Label>
+                        <Label sm={2}>HTML to obfuscate</Label>
                         <Col sm={10}>
                             <Input defaultValue={selectedHtml} type="select" name="select" onChange={this.handleChangeHtmlType}>
-                                <option key={-1} value={null}></option>
+                                <option key={0} value={null}></option>
                                 {this.renderHtmlTypesList()}
                             </Input>
                         </Col>
                         <Col sm={12}>
-                            {selectedHtml === 1 ?
+                            {selectedHtml === getLoadFileType() ?
                                 <Input type="file" label="File" onChange={this.handleUserFile} />
                                 : null}
                         </Col>
