@@ -19,7 +19,9 @@ export function getRandomLink() {
         '<a href="https://www.w3schools.com">Visit W3Schools</a>',
         '<a href="mailto:someone@example.com?Subject=Hello%20again">Send mail!</a>',
         '<a href="#top">Go to top</a>',
-        '<a href="http://google.com">Google</a>'
+        '<a href="http://google.com">Google</a>',
+        '<a href="http://tips-and-tricks.com">Tips&Ttricks</a>',
+        '<a href="#bottom">Go to bottom</a>'
     ];
     return linksArray[getRandomNumber() % linksArray.length];
 }
@@ -37,17 +39,7 @@ export function getRandomButton() {
 }
 
 export function getRandomInput() {
-    let types = [
-        "number",
-        "text",
-        "checkbox",
-        "date",
-        "range",
-        "time",
-        "week"
-    ];
-    let type = types[getRandomNumber() % types.length];
-    return `<input type="${type}">`
+    return '<input type="text">';
 }
 
 /**
@@ -161,7 +153,7 @@ export function generateQuizForm(inputCount) {
     for (; inputCount > 0; inputCount--) {
         form += `<label>${getRandomQuestion()}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>`;
         form += getRandomInput();
-        form += "</br>";
+        form += "</br>";    
         if (Math.random() >= 0.5) {
             form += "Answer-> " + getRandomLink() + "</br>";
         } else {
