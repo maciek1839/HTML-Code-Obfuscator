@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import htmlBeautify from 'html-beautify'
 import { Row, Input, Col, Container } from 'reactstrap';
-import { fromHex, toHex, toASCII, toHtmlEntities, htmlToJavascript, encodeUsingOwnFunction } from "../services/html-encoder";
+import { toHex, toHtmlEntities, htmlToJavascript, encodeUsingOwnFunction } from "../services/html-encoder";
 
 
 class ObfuscationOutput extends Component {
@@ -35,7 +35,7 @@ class ObfuscationOutput extends Component {
     }
 
     isConfigurationChanged(oldConfig, newConfig){
-        return oldConfig !=null && newConfig != null && (oldConfig.choosenAlgorithm.value != newConfig.choosenAlgorithm.value);
+        return oldConfig !=null && newConfig != null && (oldConfig.choosenAlgorithm.value !== newConfig.choosenAlgorithm.value);
     }
 
     processHtml(html) {
@@ -44,44 +44,32 @@ class ObfuscationOutput extends Component {
             case '1':
                 let htmlToJs = htmlToJavascript(html);
                 result =
-                    `
-            document.write(eval('${htmlToJs}'))
-            `
+                    `document.write(eval('${htmlToJs}'))`
                 break;
             case '2':
-                let encodedHtml = btoa(unescape(html));
+                let encodedHtml = btoa(escape(html));
                 result =
-                    `
-            document.write(atob('${encodedHtml}'))
-            `
+                    `document.write(unescape(atob('${encodedHtml}')) `
                 break;
             case '3':
                 let hex = toHex(html);
                 result =
-                    `
-            document.write(fromHex('${hex}'))
-            `;
+                    `document.write(fromHex('${hex}'))`;
                 break;
             case '4':
                 let ascii = toHtmlEntities(html);
                 result =
-                    `
-            document.write(fromHtmlEntities('${ascii}'))
-            `;
+                    `document.write(fromHtmlEntities('${ascii}'))`;
                 break;
             case '5':
                 let escapedHtml = escape(html);
                 result =
-                    `
-            document.write(unescape('${escapedHtml}'))
-            `
+                    `document.write(unescape('${escapedHtml}'))`
                 break;
             case '6':
                 let customEncoding = encodeUsingOwnFunction(html);
                 result =
-                    `
-                document.write(ownDecodingFunction('${customEncoding}'))
-                `
+                    `document.write(ownDecodingFunction('${customEncoding}'))`
                 break;
             default:
                 console.log("Not implemented method for obfuscation algorithm!");

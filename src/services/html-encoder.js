@@ -6,7 +6,6 @@
  * @param {html page in UTF-8 encoding} html 
  */
 export function toHtmlEntities(html) {
-    let result = '';
     var buf = [];
 
     for (var i = html.length - 1; i >= 0; i--) {
@@ -23,12 +22,8 @@ export function fromHtmlEntities(str) {
 }
 
 export function htmlToJavascript(html) {
-    let newLines = html.split("\n");
-    let result = '';
-    newLines.forEach(line => {
-        result += `'${line}' +` + '\n';
-    });
-    return result;
+    return html.split("\n")
+        .reduce((current, line) => current += `'${line}' +` + '\n', '');
 }
 
 export function toHex(s) {
@@ -52,10 +47,10 @@ export function encodeUsingOwnFunction(s) {
     let htmlEntities = toHtmlEntities(s);
     let result = '';
     for (let i = 0; i < htmlEntities.length; i++) {
-        if (htmlEntities.charCodeAt(i) == 28) {
+        if (htmlEntities.charCodeAt(i) === 28) {
             result += '&';
         }
-        else if (htmlEntities.charCodeAt(i) == 23) {
+        else if (htmlEntities.charCodeAt(i) === 23) {
             result += '!';
         }
         else { result += String.fromCharCode(s.charCodeAt(i) - 1); }
@@ -67,10 +62,10 @@ export function encodeUsingOwnFunction(s) {
 export function decodeUsingOwnFunction(s) {
     let result = '';
     for (let i = 0; i < s.length; i++) {
-        if (s == '&') {
+        if (s === '&') {
             result += 28;
         }
-        else if (s == '!') {
+        else if (s === '!') {
             result += 23;
         }
         else { result += String.fromCharCode(s.charCodeAt(i) + 1); }
