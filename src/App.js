@@ -128,7 +128,9 @@ class App extends Component {
             <TabPane tabId="3">
               <Row>
                 <Col sm="12">
-                  <ObfuscationOutput config={this.state.outputObfuscationConfig} />
+                  <ObfuscationOutput config={this.state.outputObfuscationConfig} 
+                    callbackProcessAction={e => this.myGlobalReducer(e)}
+                  />
                 </Col>
               </Row>
             </TabPane>

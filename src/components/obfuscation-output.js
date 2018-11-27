@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import htmlBeautify from 'html-beautify'
-import { Row, Input, Col, Container } from 'reactstrap';
+import { Button, Row, Input, Col, Container } from 'reactstrap';
 import { toHex, toHtmlEntities, htmlToJavascript, encodeUsingOwnFunction } from "../services/html-encoder";
+import { saveConfig } from "../actions/obfuscation-output-actions";
 
 
 class ObfuscationOutput extends Component {
@@ -12,8 +13,13 @@ class ObfuscationOutput extends Component {
             html: '',
             result: '',
             config: null,
-            readyToEdit: false
+            readyToEdit: false,
+            configToSaveName: ''
         }
+    }
+
+    saveConfiguration = _ => {
+        this.props.callbackProcessAction(saveConfig(this.config));
     }
 
     handleChange = evt => {
@@ -34,8 +40,8 @@ class ObfuscationOutput extends Component {
         }
     }
 
-    isConfigurationChanged(oldConfig, newConfig){
-        return oldConfig !=null && newConfig != null && (oldConfig.choosenAlgorithm.value !== newConfig.choosenAlgorithm.value);
+    isConfigurationChanged(oldConfig, newConfig) {
+        return oldConfig != null && newConfig != null && (oldConfig.choosenAlgorithm.value !== newConfig.choosenAlgorithm.value);
     }
 
     processHtml(html) {
@@ -81,10 +87,27 @@ class ObfuscationOutput extends Component {
         this.setState({ html: this.state.html + " " })
     }
 
+    updateConfigToSaveName = (evt) => {
+        this.setState({
+            configToSaveName: evt.target.value
+          });
+    }
+
     render() {
         return (
             <div>
                 <Container>
+                    <Row style={{ marginTop: 5 }}>
+                        <Col sm={8}>
+
+                        </Col>
+                        <Col sm={2}>
+                            <Input type="text" placeholder="Enter config name..." value={this.state.configToSaveName} onChange={this.updateConfigToSaveName} />
+                        </Col>
+                        <Col sm={2}>
+                            <Button type="button" className="btn btn-info" onClick={this.saveConfiguration} disabled={this.state.configToSaveName.length === 0}>Save configuration</Button>
+                        </Col>
+                    </Row>
                     <Row>
                         <Col sm={6}>
                             <h4>HTML</h4>

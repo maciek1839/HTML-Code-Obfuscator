@@ -3,13 +3,15 @@ import HtmlType, { getLoadFileType } from '../model/enums/html-type';
 import { setAlgorithm, setHtmlType, setHtmlFile, showResult } from '../actions/config-form';
 import { Collapse, Button, Form, FormGroup, Label, Input, Col, Container, ListGroupItem, ListGroup } from 'reactstrap';
 import GenerateHtmlModal from "./generate-html-modal";
+import { getDefaultConfiguration } from "../model/enums/preserved-configuraiton";
 
 class ConfigurationForm extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            showAlgorithmDetails: false
+            showAlgorithmDetails: false,
+
         };
     }
 
@@ -52,6 +54,20 @@ class ConfigurationForm extends Component {
         return list;
     }
 
+    renderDefaultConfigurations = () => {
+        let elements = [];
+
+        getDefaultConfiguration().forEach(elem => {
+            elements.push(<option key={elem.id} value={elem.id}>{elem.name}</option>)
+        });
+
+        return elements;
+    }
+
+    handleLoadConfig = (value) => {
+
+    }
+
     render() {
         let config = this.props.config;
         let selectedAlgorithm = config.choosenAlgorithm ? config.choosenAlgorithm.value + 1 : 0;
@@ -63,6 +79,22 @@ class ConfigurationForm extends Component {
                     callbackProcessAction={e => this.props.callbackProcessAction(e)}>
                 </GenerateHtmlModal>
                 <Form>
+                    <FormGroup row></FormGroup>
+                    <FormGroup row>
+                        <Col sm={6}>
+                        </Col>
+                        <Col sm={2}>
+                            Load configuration:
+                    </Col>
+                        <Col sm={4}>
+                            <Input type="select" onChange={this.handleLoadConfig}>
+                                <option key={0} value={null}></option>
+                                <option key={1} value={null} disabled={true}>default</option>
+                                {this.renderDefaultConfigurations()}
+                                <option key={2} value={null} disabled={true}>saved</option>
+                            </Input>
+                        </Col>
+                    </FormGroup>
                     <FormGroup row></FormGroup>
                     <FormGroup row>
                         <Label sm={2}>Algorithm</Label>
