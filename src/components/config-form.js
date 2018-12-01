@@ -3,8 +3,8 @@ import HtmlType, { getLoadFileType } from '../model/enums/html-type';
 import { setAlgorithm, setHtmlType, setHtmlFile, showResult, loadConfigAction } from '../actions/config-form';
 import { Collapse, Button, Form, FormGroup, Label, Input, Col, Container, ListGroupItem, ListGroup } from 'reactstrap';
 import GenerateHtmlModal from "./generate-html-modal";
-import { getDefaultConfiguration } from "../model/enums/preserved-configuraiton";
-import { clearUserConfigs, getConfigs, getConfig } from "../services/local-storage-service";
+import { getDefaultConfiguration, getPreseredConfiguration } from "../model/enums/preserved-configuraiton";
+import { getConfigs, getConfig } from "../services/local-storage-service";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 class ConfigurationForm extends Component {
@@ -76,20 +76,17 @@ class ConfigurationForm extends Component {
         return elements;
     }
 
+    //todo: refactor code, make common service for configuration/presereced and custom, add loading from file
     handleLoadConfig = (event) => {
-        this.props.callbackProcessAction(loadConfigAction(getConfig(event.target.value)));
+        let config = getConfig(event.target.value) ? getConfig(event.target.value) : getPreseredConfiguration(event.target.value).config;
+        this.props.callbackProcessAction(loadConfigAction(config));
         NotificationManager.success('Successfully load config!', event.target.value);
-    }
-
-    clearConfigurations = _ => {
-        clearUserConfigs();
-        this.forceUpdate();
     }
 
     render() {
         let config = this.props.config;
-        let selectedAlgorithm = config.choosenAlgorithm ? parseInt(config.choosenAlgorithm.value) + 1 : 0;
-        let selectedHtml = config.choosenHtml != null ? parseInt(config.choosenHtml) :0;
+        let selectedAlgorithm = config.choosenAlgorithm ? parseInt(config.choosenAlgorithm.value) : 0;
+        let selectedHtml = config.choosenHtml != null ? parseInt(config.choosenHtml) : 0;
         let isDisabledSubmit = !(config && selectedAlgorithm && selectedHtml != null && config.html);
         return (
             <Container>

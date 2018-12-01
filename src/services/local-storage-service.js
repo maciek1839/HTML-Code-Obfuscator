@@ -16,7 +16,7 @@ export function saveConfig(userConfig) {
 export function getConfigs() {
     let configList = JSON.parse(localStorage.getItem(APP_KEY));
 
-    return configList;
+    return configList ? configList : [];
 }
 
 export function clearUserConfigs() {

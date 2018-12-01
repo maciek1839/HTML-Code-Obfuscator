@@ -30,6 +30,7 @@ export function showResultReducer(prevState, param) {
 }
 
 export function loadConfigReducer(prevState, config){
+    console.log(config);
     let newState = { ...prevState };
     newState.obfuscationConfig = config;
     return newState;

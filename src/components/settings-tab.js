@@ -1,10 +1,15 @@
 
 import React, { Component } from "react";
 import { Button, Row, Label, Col, Container } from 'reactstrap';
+import { clearUserConfigs } from "../services/local-storage-service";
 
 
 
-class Settings extends Component {
+class SettingsTab extends Component {
+
+    clearConfigurations = _ => {
+        clearUserConfigs();
+    }
 
     render() {
         return (
@@ -20,4 +25,4 @@ class Settings extends Component {
     }
 }
 
-export default Settings;
+export default SettingsTab;

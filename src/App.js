@@ -6,7 +6,7 @@ import { Container, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col } from 
 import classnames from 'classnames';
 import ConfigurationForm from "./components/config-form";
 import HTMLPreview from "./components/html-preview";
-import Settings from "./components/settings";
+import SettingsTab from "./components/settings-tab";
 import ObfuscationOutput from "./components/obfuscation-output";
 import { algorithmReducer, htmlTypeReducer, htmlTypeFileReducer, showResultReducer, loadConfigReducer } from "./reducers/config-form-reducer";
 import { getInitialState } from "./model/app-initial-state"
@@ -158,7 +158,7 @@ class App extends Component {
             <TabPane tabId="4">
               <Row>
                 <Col sm="12">
-                    <Settings />
+                    <SettingsTab />
                 </Col>
               </Row>
             </TabPane>
