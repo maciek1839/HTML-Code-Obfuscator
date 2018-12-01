@@ -1,5 +1,6 @@
-export function saveConfigReducer(prevState, htmlConfig) {
+import { saveConfig } from "../services/local-storage-service";
 
-    //todo
+export function saveConfigReducer(prevState, userConfig) {
+    saveConfig(userConfig);
     return prevState;
 }

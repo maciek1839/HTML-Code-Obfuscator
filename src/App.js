@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'react-notifications/lib/notifications.css';
 import { Container, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import ConfigurationForm from "./components/config-form";
 import HTMLPreview from "./components/html-preview";
+import Settings from "./components/settings";
 import ObfuscationOutput from "./components/obfuscation-output";
-import { algorithmReducer, htmlTypeReducer, htmlTypeFileReducer, showResultReducer } from "./reducers/config-form-reducer";
+import { algorithmReducer, htmlTypeReducer, htmlTypeFileReducer, showResultReducer, loadConfigReducer } from "./reducers/config-form-reducer";
 import { getInitialState } from "./model/app-initial-state"
 import { ConfigFormActions } from "./actions/config-form"
 import { GenerateHtmlModalActions } from "./actions/generate-html-modal-action";
 import { closeModalReducer, generateHtmlReducer } from './reducers/generate-html-modal';
 import { PreviewHtmlActions } from './actions/html-preview-actions';
 import { regenerateHtmlReducer } from './reducers/preview-html-reducer';
+import { ObfuscationOutputActions } from './actions/obfuscation-output-actions';
+import { saveConfigReducer } from './reducers/obfuscation-output-reducer';
 
 class App extends Component {
 
@@ -51,6 +55,14 @@ class App extends Component {
       case PreviewHtmlActions.REGENERATE_HTML:
         newState = regenerateHtmlReducer(this.state, action.payload);
         this.setState(newState);
+      break;
+      case ObfuscationOutputActions.SAVE_CONFIG:
+      newState = saveConfigReducer(this.state, action.payload);
+      this.setState(newState);
+      break;
+      case ConfigFormActions.LOAD_CONFIG:
+      newState = loadConfigReducer(this.state, action.payload);
+      this.setState(newState);
       break;
       default:
         console.log(`No action type ${action.type} implemented!`);
@@ -101,6 +113,15 @@ class App extends Component {
                 Result
             </NavLink>
             </NavItem>
+            <NavItem>
+              <NavLink
+                className={classnames({ active: this.state.activeTab === '4' })}
+                onClick={() => { this.toggle('4'); }}
+                href="#"
+              >
+                Settings
+            </NavLink>
+            </NavItem>
           </Nav>
           <TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="1">
@@ -131,6 +152,13 @@ class App extends Component {
                   <ObfuscationOutput config={this.state.outputObfuscationConfig} 
                     callbackProcessAction={e => this.myGlobalReducer(e)}
                   />
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane tabId="4">
+              <Row>
+                <Col sm="12">
+                    <Settings />
                 </Col>
               </Row>
             </TabPane>

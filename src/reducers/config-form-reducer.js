@@ -28,3 +28,9 @@ export function showResultReducer(prevState, param) {
     newState.outputObfuscationConfig = { ...newState.obfuscationConfig };
     return newState;
 }
+
+export function loadConfigReducer(prevState, config){
+    let newState = { ...prevState };
+    newState.obfuscationConfig = config;
+    return newState;
+}

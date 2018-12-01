@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import HtmlType, { getLoadFileType } from '../model/enums/html-type';
-import { setAlgorithm, setHtmlType, setHtmlFile, showResult } from '../actions/config-form';
+import { setAlgorithm, setHtmlType, setHtmlFile, showResult, loadConfigAction } from '../actions/config-form';
 import { Collapse, Button, Form, FormGroup, Label, Input, Col, Container, ListGroupItem, ListGroup } from 'reactstrap';
 import GenerateHtmlModal from "./generate-html-modal";
 import { getDefaultConfiguration } from "../model/enums/preserved-configuraiton";
+import { clearUserConfigs, getConfigs, getConfig } from "../services/local-storage-service";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 class ConfigurationForm extends Component {
 
@@ -64,34 +66,51 @@ class ConfigurationForm extends Component {
         return elements;
     }
 
-    handleLoadConfig = (value) => {
+    renderSavedConfigurations = () => {
+        let elements = [];
 
+        getConfigs().forEach(elem => {
+            elements.push(<option key={elem.title} value={elem.title}>{elem.title}</option>)
+        });
+
+        return elements;
+    }
+
+    handleLoadConfig = (event) => {
+        this.props.callbackProcessAction(loadConfigAction(getConfig(event.target.value)));
+        NotificationManager.success('Successfully load config!', event.target.value);
+    }
+
+    clearConfigurations = _ => {
+        clearUserConfigs();
+        this.forceUpdate();
     }
 
     render() {
         let config = this.props.config;
-        let selectedAlgorithm = config.choosenAlgorithm ? config.choosenAlgorithm.value + 1 : 0;
-        let selectedHtml = config.choosenHtml != null ? config.choosenHtml : null;
+        let selectedAlgorithm = config.choosenAlgorithm ? parseInt(config.choosenAlgorithm.value) + 1 : 0;
+        let selectedHtml = config.choosenHtml != null ? parseInt(config.choosenHtml) :0;
         let isDisabledSubmit = !(config && selectedAlgorithm && selectedHtml != null && config.html);
         return (
             <Container>
+                <NotificationContainer />
                 <GenerateHtmlModal showHtmlTemplateModal={this.props.showHtmlTemplateModal}
                     callbackProcessAction={e => this.props.callbackProcessAction(e)}>
                 </GenerateHtmlModal>
                 <Form>
                     <FormGroup row></FormGroup>
                     <FormGroup row>
-                        <Col sm={6}>
-                        </Col>
-                        <Col sm={2}>
-                            Load configuration:
+
+                        <Col sm={9}>
+                            Load configuration
                     </Col>
-                        <Col sm={4}>
+                        <Col sm={3}>
                             <Input type="select" onChange={this.handleLoadConfig}>
                                 <option key={0} value={null}></option>
                                 <option key={1} value={null} disabled={true}>default</option>
                                 {this.renderDefaultConfigurations()}
                                 <option key={2} value={null} disabled={true}>saved</option>
+                                {this.renderSavedConfigurations()}
                             </Input>
                         </Col>
                     </FormGroup>
@@ -99,7 +118,7 @@ class ConfigurationForm extends Component {
                     <FormGroup row>
                         <Label sm={2}>Algorithm</Label>
                         <Col sm={10}>
-                            <Input defaultValue={selectedAlgorithm} type="select" name="select" onChange={this.handleChangeAlgorithms}>
+                            <Input value={selectedAlgorithm} type="select" name="select" onChange={this.handleChangeAlgorithms}>
                                 <option key={0} value={null}></option>
                                 {this.props.algorithms.map((item) =>
                                     <option key={item.value} value={item.value}>{item.name}</option>
@@ -123,7 +142,7 @@ class ConfigurationForm extends Component {
                     <FormGroup row>
                         <Label sm={2}>HTML to obfuscate</Label>
                         <Col sm={10}>
-                            <Input defaultValue={selectedHtml} type="select" name="select" onChange={this.handleChangeHtmlType}>
+                            <Input value={selectedHtml} type="select" name="select" onChange={this.handleChangeHtmlType}>
                                 <option key={0} value={null}></option>
                                 {this.renderHtmlTypesList()}
                             </Input>

@@ -10,6 +10,7 @@
     "react-autobind": "^1.0.6",
     "react-contenteditable": "^3.1.1",
     "react-dom": "^16.5.2",
+    "react-notifications": "^1.4.3",
     "react-scripts": "2.0.4",
     "reactstrap": "^6.5.0"
   },

@@ -33,10 +33,19 @@ export const showResult = () => {
     };
 }
 
+export const loadConfigAction = (config) => {
+    return {
+        type: ConfigFormActions.LOAD_CONFIG,
+        payload: config
+    };
+}
+
+
 export const ConfigFormActions = {
     SET_ALGORITHM: 'SET_ALGORITHM',
     SET_HTML_TYPE: 'SET_HTML_TYPE',
     SET_HTML_FILE: 'SET_HTML_FILE',
     SHOW_GENERATE_HTML_MODAL: 'SHOW_GENERATE_HTML_MODAL',
-    SHOW_RESULT: 'SHOW_RESULT'
+    SHOW_RESULT: 'SHOW_RESULT',
+    LOAD_CONFIG: 'LOAD_CONFIG'
 }

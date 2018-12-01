@@ -3,6 +3,8 @@ import htmlBeautify from 'html-beautify'
 import { Button, Row, Input, Col, Container } from 'reactstrap';
 import { toHex, toHtmlEntities, htmlToJavascript, encodeUsingOwnFunction } from "../services/html-encoder";
 import { saveConfig } from "../actions/obfuscation-output-actions";
+import { createUserConfig } from "../services/local-storage-service";
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 
 class ObfuscationOutput extends Component {
@@ -19,7 +21,9 @@ class ObfuscationOutput extends Component {
     }
 
     saveConfiguration = _ => {
-        this.props.callbackProcessAction(saveConfig(this.config));
+        this.props.callbackProcessAction(saveConfig(createUserConfig(this.state.configToSaveName,this.state.config)));
+        NotificationManager.info('Configuration saved!');
+        this.setState({configToSaveName: ''});
     }
 
     handleChange = evt => {
@@ -96,6 +100,7 @@ class ObfuscationOutput extends Component {
     render() {
         return (
             <div>
+                <NotificationContainer/>
                 <Container>
                     <Row style={{ marginTop: 5 }}>
                         <Col sm={8}>
