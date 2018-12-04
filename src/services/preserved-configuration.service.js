@@ -85,8 +85,6 @@ export function getPreseredConfiguration(id) {
     return result;
 }
 
-export function checkIfConfigExists(name){
-    let result=false;
-    getConfigs().forEach(e=>result=e.name===name);
-    return result;
+export function checkIfConfigExists(name) {
+    return getConfigs().reduce((result, next) => result = next.name === name, false);
 }
