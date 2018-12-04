@@ -1,7 +1,7 @@
 
 import React, { Component } from "react";
 import { Button, Row, Label, Col, Container } from 'reactstrap';
-import { clearUserConfigs } from "../services/local-storage-service";
+import { clearUserConfigs } from "../services/preserved-configuration.service";
 
 
 

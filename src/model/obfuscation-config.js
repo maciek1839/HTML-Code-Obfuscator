@@ -6,3 +6,12 @@ export function getInitialObfuscationConfig(){
         htmlConfig: null
     };
 };
+
+export function createConfig(choosenAlgorithm, choosenHtml, html, htmlConfig=null){
+    return {
+        choosenAlgorithm: choosenAlgorithm,
+        choosenHtml: choosenHtml,
+        html: html,
+        htmlConfig: htmlConfig
+    };
+}

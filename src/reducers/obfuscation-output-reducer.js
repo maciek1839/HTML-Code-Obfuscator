@@ -1,4 +1,5 @@
-import { saveConfig } from "../services/local-storage-service";
+import { saveConfig } from "../services/preserved-configuration.service";
+
 
 export function saveConfigReducer(prevState, userConfig) {
     saveConfig(userConfig);

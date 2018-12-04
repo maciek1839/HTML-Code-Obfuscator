@@ -1,8 +1,9 @@
+
 export function getDefaultAlgorithms() {
     return [
         {
             name: 'Html to Javascript',
-            value: '1',
+            value: AlgorithmType.HTML_TO_JAVASCRIPT,
             details: {
                 steps: [
                     'Split HTML file line by line.',
@@ -12,7 +13,7 @@ export function getDefaultAlgorithms() {
         },
         {
             name: 'Html to Base64 characters',
-            value: '2',
+            value: AlgorithmType.HTML_TO_BASE64,
             details: {
                 steps: [
                     'Create js function encoding characters to Base64 characters.',
@@ -23,7 +24,7 @@ export function getDefaultAlgorithms() {
         },
         {
             name: 'Html to Hex characters',
-            value: '3',
+            value: AlgorithmType.HTML_TO_HEX,
             details: {
                 steps: [
                     'Create js function encoding characters to Hex characters.',
@@ -34,7 +35,7 @@ export function getDefaultAlgorithms() {
         },
         {
             name: 'Html to html entities',
-            value: '4',
+            value: AlgorithmType.HTML_TO_HTML_ENTITIES,
             details: {
                 steps: [
                     'Create js function encoding characters to html codes.',
@@ -45,7 +46,7 @@ export function getDefaultAlgorithms() {
         },
         {
             name: 'Html to escape characters (ASCII)',
-            value: '5',
+            value: AlgorithmType.HTML_ESCAPE_CHARACTERS,
             details: {
                 steps: [
                     'Change endcoding using escape javascript function.',
@@ -56,7 +57,7 @@ export function getDefaultAlgorithms() {
         },
         {
             name: 'Using own encoding and decoding function.',
-            value: '6',
+            value: AlgorithmType.HTML_ENCODE_WITH_OWN_FUN,
             details: {
                 steps: [
                     'Encode HTML using own function.',
@@ -67,4 +68,18 @@ export function getDefaultAlgorithms() {
             }
         }
     ];
+}
+
+export const AlgorithmType = {
+    HTML_TO_JAVASCRIPT: '1',
+    HTML_TO_BASE64: '2',
+    HTML_TO_HEX: '3',
+    HTML_TO_HTML_ENTITIES: '4',
+    HTML_ESCAPE_CHARACTERS: '5',
+    HTML_ENCODE_WITH_OWN_FUN: '6'
+}
+
+export function getAlgorithm(id) {
+    let result = getDefaultAlgorithms().filter(e => e.value === id);
+    return result.length > 0 ? result[0] : null;
 }

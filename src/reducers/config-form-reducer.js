@@ -22,15 +22,14 @@ export function htmlTypeFileReducer(prevState, filContent) {
     return newState;
 }
 
-export function showResultReducer(prevState, param) {
+export function showResultReducer(prevState) {
     let newState = { ...prevState };
     newState.activeTab = '3';
     newState.outputObfuscationConfig = { ...newState.obfuscationConfig };
     return newState;
 }
 
-export function loadConfigReducer(prevState, config){
-    console.log(config);
+export function loadConfigReducer(prevState, config) {
     let newState = { ...prevState };
     newState.obfuscationConfig = config;
     return newState;

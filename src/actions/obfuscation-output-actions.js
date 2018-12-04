@@ -1,4 +1,4 @@
-export function saveConfig(config){
+export function saveConfigAction(config){
     return {
         type: ObfuscationOutputActions.SAVE_CONFIG,
         payload: config

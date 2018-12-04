@@ -55,15 +55,15 @@ class App extends Component {
       case PreviewHtmlActions.REGENERATE_HTML:
         newState = regenerateHtmlReducer(this.state, action.payload);
         this.setState(newState);
-      break;
+        break;
       case ObfuscationOutputActions.SAVE_CONFIG:
-      newState = saveConfigReducer(this.state, action.payload);
-      this.setState(newState);
-      break;
+        newState = saveConfigReducer(this.state, action.payload);
+        this.setState(newState);
+        break;
       case ConfigFormActions.LOAD_CONFIG:
-      newState = loadConfigReducer(this.state, action.payload);
-      this.setState(newState);
-      break;
+        newState = loadConfigReducer(this.state, action.payload);
+        this.setState(newState);
+        break;
       default:
         console.log(`No action type ${action.type} implemented!`);
     }
@@ -139,9 +139,9 @@ class App extends Component {
             <TabPane tabId="2">
               <Row>
                 <Col sm="12">
-                  <HTMLPreview previewHtml={this.state.obfuscationConfig.html} 
-                  callbackProcessAction={e => this.myGlobalReducer(e)}
-                  htmlConfig={this.state.obfuscationConfig.htmlConfig}
+                  <HTMLPreview previewHtml={this.state.obfuscationConfig.html}
+                    callbackProcessAction={e => this.myGlobalReducer(e)}
+                    htmlConfig={this.state.obfuscationConfig.htmlConfig}
                   />
                 </Col>
               </Row>
@@ -149,7 +149,7 @@ class App extends Component {
             <TabPane tabId="3">
               <Row>
                 <Col sm="12">
-                  <ObfuscationOutput config={this.state.outputObfuscationConfig} 
+                  <ObfuscationOutput config={this.state.outputObfuscationConfig}
                     callbackProcessAction={e => this.myGlobalReducer(e)}
                   />
                 </Col>
@@ -158,7 +158,7 @@ class App extends Component {
             <TabPane tabId="4">
               <Row>
                 <Col sm="12">
-                    <SettingsTab />
+                  <SettingsTab />
                 </Col>
               </Row>
             </TabPane>

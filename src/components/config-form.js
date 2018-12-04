@@ -3,9 +3,9 @@ import HtmlType, { getLoadFileType } from '../model/enums/html-type';
 import { setAlgorithm, setHtmlType, setHtmlFile, showResult, loadConfigAction } from '../actions/config-form';
 import { Collapse, Button, Form, FormGroup, Label, Input, Col, Container, ListGroupItem, ListGroup } from 'reactstrap';
 import GenerateHtmlModal from "./generate-html-modal";
-import { getDefaultConfiguration, getPreseredConfiguration } from "../model/enums/preserved-configuraiton";
-import { getConfigs, getConfig } from "../services/local-storage-service";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { getDefaultConfiguration, getConfigs} from "../services/preserved-configuration.service";
+import { getAlgorithm } from "../model/enums/algorithm-type";
 
 class ConfigurationForm extends Component {
 
@@ -24,8 +24,7 @@ class ConfigurationForm extends Component {
     }
 
     handleChangeAlgorithms = (event) => {
-        let algorithmName = event.target.value;
-        let newChoosenAlgorithm = this.props.algorithms.filter(e => e.value === algorithmName)[0];
+        let newChoosenAlgorithm = event.target.value;
         this.props.callbackProcessAction(setAlgorithm(newChoosenAlgorithm));
     }
 
@@ -56,36 +55,33 @@ class ConfigurationForm extends Component {
         return list;
     }
 
-    renderDefaultConfigurations = () => {
+    renderConfigurations = () =>{
         let elements = [];
-
+        elements.push(<option key={0} value={null}></option>);
+        elements.push(<option key={1} value={null} disabled={true}>default</option>);
         getDefaultConfiguration().forEach(elem => {
-            elements.push(<option key={elem.id} value={elem.id}>{elem.name}</option>)
+            elements.push(<option key={elem.name} value={JSON.stringify(elem)}>{elem.name}</option>)
         });
-
-        return elements;
-    }
-
-    renderSavedConfigurations = () => {
-        let elements = [];
-
+        elements.push(<option key={2} value={null} disabled={true}>saved</option>);
         getConfigs().forEach(elem => {
-            elements.push(<option key={elem.title} value={elem.title}>{elem.title}</option>)
+            elements.push(<option key={elem.name} value={JSON.stringify(elem)}>{elem.name}</option>)
         });
 
         return elements;
     }
 
-    //todo: refactor code, make common service for configuration/presereced and custom, add loading from file
     handleLoadConfig = (event) => {
-        let config = getConfig(event.target.value) ? getConfig(event.target.value) : getPreseredConfiguration(event.target.value).config;
-        this.props.callbackProcessAction(loadConfigAction(config));
-        NotificationManager.success('Successfully load config!', event.target.value);
+        if (event.target.value) {
+            let preservedConfig=JSON.parse(event.target.value);
+            this.props.callbackProcessAction(loadConfigAction(preservedConfig.config));
+            NotificationManager.success('Successfully load config!', preservedConfig.name);
+        }
     }
 
     render() {
         let config = this.props.config;
-        let selectedAlgorithm = config.choosenAlgorithm ? parseInt(config.choosenAlgorithm.value) : 0;
+        let selectedAlgorithm = config.choosenAlgorithm ? config.choosenAlgorithm : 0;
+        let algorithmDetails = getAlgorithm(selectedAlgorithm);
         let selectedHtml = config.choosenHtml != null ? parseInt(config.choosenHtml) : 0;
         let isDisabledSubmit = !(config && selectedAlgorithm && selectedHtml != null && config.html);
         return (
@@ -103,11 +99,7 @@ class ConfigurationForm extends Component {
                     </Col>
                         <Col sm={3}>
                             <Input type="select" onChange={this.handleLoadConfig}>
-                                <option key={0} value={null}></option>
-                                <option key={1} value={null} disabled={true}>default</option>
-                                {this.renderDefaultConfigurations()}
-                                <option key={2} value={null} disabled={true}>saved</option>
-                                {this.renderSavedConfigurations()}
+                                {this.renderConfigurations()}
                             </Input>
                         </Col>
                     </FormGroup>
@@ -123,13 +115,13 @@ class ConfigurationForm extends Component {
                             </Input>
                         </Col>
                     </FormGroup>
-                    {config && config.choosenAlgorithm ? <FormGroup>
+                    {algorithmDetails ? <FormGroup>
                         <Col sm={{ size: 2, offset: 10 }}>
                             <Button color="primary" onClick={this.openCloseDetails} style={{ marginBottom: '1rem' }}>Show details</Button>
                         </Col>
                         <Collapse isOpen={this.state.showAlgorithmDetails}>
                             <ListGroup flush>
-                                {config.choosenAlgorithm.details.steps.map((step, index) =>
+                                {algorithmDetails.details.steps.map((step, index) =>
                                     <ListGroupItem key={index}>{index + 1}. {step}</ListGroupItem>
                                 )}
                             </ListGroup>

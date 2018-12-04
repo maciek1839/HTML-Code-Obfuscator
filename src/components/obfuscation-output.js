@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import htmlBeautify from 'html-beautify'
 import { Button, Row, Input, Col, Container } from 'reactstrap';
 import { toHex, toHtmlEntities, htmlToJavascript, encodeUsingOwnFunction } from "../services/html-encoder";
-import { saveConfig } from "../actions/obfuscation-output-actions";
-import { createUserConfig } from "../services/local-storage-service";
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { saveConfigAction } from "../actions/obfuscation-output-actions";
+import { createUserConfig, checkIfConfigExists } from "../services/preserved-configuration.service";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { AlgorithmType } from "../model/enums/algorithm-type";
 
 
 class ObfuscationOutput extends Component {
@@ -21,9 +22,13 @@ class ObfuscationOutput extends Component {
     }
 
     saveConfiguration = _ => {
-        this.props.callbackProcessAction(saveConfig(createUserConfig(this.state.configToSaveName,this.state.config)));
-        NotificationManager.info('Configuration saved!');
-        this.setState({configToSaveName: ''});
+        if (checkIfConfigExists(this.state.configToSaveName)) {
+            NotificationManager.error('Configuration exists!');
+        } else {
+            this.props.callbackProcessAction(saveConfigAction(createUserConfig(this.state.configToSaveName, this.state.config)));
+            NotificationManager.info('Configuration saved!');
+            this.setState({ configToSaveName: '' });
+        }
     }
 
     handleChange = evt => {
@@ -50,33 +55,33 @@ class ObfuscationOutput extends Component {
 
     processHtml(html) {
         let result = null;
-        switch (this.props.config.choosenAlgorithm.value) {
-            case '1':
+        switch (this.props.config.choosenAlgorithm) {
+            case AlgorithmType.HTML_TO_JAVASCRIPT:
                 let htmlToJs = htmlToJavascript(html);
                 result =
                     `document.write(eval('${htmlToJs}'))`
                 break;
-            case '2':
+            case AlgorithmType.HTML_TO_BASE64:
                 let encodedHtml = btoa(escape(html));
                 result =
                     `document.write(unescape(atob('${encodedHtml}')) `
                 break;
-            case '3':
+            case AlgorithmType.HTML_TO_HEX:
                 let hex = toHex(html);
                 result =
                     `document.write(fromHex('${hex}'))`;
                 break;
-            case '4':
+            case AlgorithmType.HTML_TO_HTML_ENTITIES:
                 let ascii = toHtmlEntities(html);
                 result =
                     `document.write(fromHtmlEntities('${ascii}'))`;
                 break;
-            case '5':
+            case AlgorithmType.HTML_ESCAPE_CHARACTERS:
                 let escapedHtml = escape(html);
                 result =
                     `document.write(unescape('${escapedHtml}'))`
                 break;
-            case '6':
+            case AlgorithmType.HTML_ENCODE_WITH_OWN_FUN:
                 let customEncoding = encodeUsingOwnFunction(html);
                 result =
                     `document.write(ownDecodingFunction('${customEncoding}'))`
@@ -94,13 +99,13 @@ class ObfuscationOutput extends Component {
     updateConfigToSaveName = (evt) => {
         this.setState({
             configToSaveName: evt.target.value
-          });
+        });
     }
 
     render() {
         return (
             <div>
-                <NotificationContainer/>
+                <NotificationContainer />
                 <Container>
                     <Row style={{ marginTop: 5 }}>
                         <Col sm={8}>
