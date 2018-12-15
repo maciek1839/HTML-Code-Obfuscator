@@ -99,7 +99,7 @@ export function getRandomFooter() {
     return arrayFooters[getRandomNumber() % arrayFooters.length];
 }
 
-export function getRandomImage(size = null) {
+export function getRandomImage(size: string | null = null) {
     let css = 'position: sticky;';
     let url = '';
     let text = getRandomTitleText();
@@ -107,7 +107,8 @@ export function getRandomImage(size = null) {
         "noto",
         "lobster"
     ];
-    let font = fontArray[new Date().getTime() % fontArray.length];;
+    let font = fontArray[new Date().getTime() % fontArray.length];
+
     if (size) {
         url = `https://fakeimg.pl/${size}/`
     } else {
@@ -126,7 +127,7 @@ export function getRandomNumber() {
 }
 
 export function getRandomBlockQuote() {
-    let arrayQuotes= [
+    let arrayQuotes = [
         `For 50 years, WWF has been protecting the future of nature.
         The world's leading conservation organization,
         WWF works in 100 countries and is supported by
@@ -147,13 +148,13 @@ export function getRandomBlockQuote() {
     </blockquote>`;
 }
 
-export function generateQuizForm(inputCount) {
+export function generateQuizForm(inputCount: number) {
     let form = `<div style="border-style: inset">`;
     form += "<h5>Quiz!</h5>";
     for (; inputCount > 0; inputCount--) {
         form += `<label>${getRandomQuestion()}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>`;
         form += getRandomInput();
-        form += "</br>";    
+        form += "</br>";
         if (Math.random() >= 0.5) {
             form += "Answer-> " + getRandomLink() + "</br>";
         } else {

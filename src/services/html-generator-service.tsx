@@ -1,11 +1,17 @@
 import { getOpeningTag, getClosingTag, generateQuizForm, getRandomImage, getRandomParagraph, getRandomHeader, getRandomBlockQuote, randomCount } from "../utils/html-generator-factory";
 
+export interface HtmlConfig{
+    'section'?:number;
+    'header': number;
+    'paragraph': number;
+    'input': number;
+}
 
 export function prepareHtmlConfig(
-    sectionCount,
-    headerCount,
-    paragraphCount,
-    inputCount) {
+    sectionCount:number,
+    headerCount:number,
+    paragraphCount:number,
+    inputCount:number):HtmlConfig {
     return {
         'section': sectionCount,
         'header': headerCount,
@@ -14,9 +20,9 @@ export function prepareHtmlConfig(
     };
 }
 
-export function generateHTML(config) {
+export function generateHTML(config:HtmlConfig) {
     let result = getOpeningTag();
-    let sectionNumber = config.section;
+    let sectionNumber:any = config.section;
     for (; sectionNumber > 0; sectionNumber--) {
         let sectionResult = generateSection(config);
         result += sectionResult.html;
@@ -27,12 +33,12 @@ export function generateHTML(config) {
     return result;
 }
 
-function generateSection(config) {
+function generateSection(config:HtmlConfig) {
     const limit = 3;
-    let updatedConfig = { ...config };
-    let headerCount = randomCount() % limit + 1;
-    let paragraphCount = randomCount() % limit + 1;
-    let inputCount = randomCount() % limit + 1;
+    let updatedConfig:HtmlConfig;
+    let headerCount:any = randomCount() % limit + 1;
+    let paragraphCount:any = randomCount() % limit + 1;
+    let inputCount:any = randomCount() % limit + 1;
 
     updatedConfig = {
         'header': config.header - headerCount,
@@ -51,7 +57,7 @@ function generateSection(config) {
     for (; headerCount > 0; headerCount--) {
         isEmptySection = false;
         let notEmpty = false;
-        section += getRandomHeader()
+        section += getRandomHeader();
         if (paragraphCount > 0) {
             notEmpty = true;
             let withLink = Math.random() >= 0.5;
@@ -96,7 +102,7 @@ function generateSection(config) {
         section += getRandomBlockQuote();
     }
 
-    section += "</section>"
+    section += "</section>";
 
     return { "html": section, "config": updatedConfig };
 }

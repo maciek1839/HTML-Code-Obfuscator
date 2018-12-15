@@ -7,9 +7,9 @@ import { clearUserConfigs } from "../services/preserved-configuration.service";
 
 class SettingsTab extends Component {
 
-    clearConfigurations = _ => {
+    clearConfigurations = () => {
         clearUserConfigs();
-    }
+    };
 
     render() {
         return (

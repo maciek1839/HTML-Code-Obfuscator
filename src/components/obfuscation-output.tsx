@@ -1,16 +1,20 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import htmlBeautify from 'html-beautify'
-import { Button, Row, Input, Col, Container } from 'reactstrap';
-import { toHex, toHtmlEntities, htmlToJavascript, encodeUsingOwnFunction } from "../services/html-encoder";
-import { saveConfigAction } from "../actions/obfuscation-output-actions";
-import { createUserConfig, checkIfConfigExists } from "../services/preserved-configuration.service";
-import { NotificationContainer, NotificationManager } from 'react-notifications';
-import { AlgorithmType } from "../model/enums/algorithm-type";
+import {Button, Col, Container, Input, Row} from 'reactstrap';
+import {encodeUsingOwnFunction, htmlToJavascript, toHex, toHtmlEntities} from "../services/html-encoder";
+import {saveConfigAction} from "../actions/obfuscation-output-actions";
+import {checkIfConfigExists, createUserConfig} from "../services/preserved-configuration.service";
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {AlgorithmType} from "../model/enums/algorithm-type";
 
+export interface ObfuscationOutputProps {
+    config: any;
+    callbackProcessAction: any;
+}
 
-class ObfuscationOutput extends Component {
+class ObfuscationOutput extends Component<ObfuscationOutputProps, any> {
 
-    constructor(props) {
+    constructor(props: ObfuscationOutputProps) {
         super(props);
         this.state = {
             html: '',
@@ -21,17 +25,17 @@ class ObfuscationOutput extends Component {
         }
     }
 
-    saveConfiguration = _ => {
+    saveConfiguration = () => {
         if (checkIfConfigExists(this.state.configToSaveName)) {
             NotificationManager.error('Configuration exists!');
         } else {
             this.props.callbackProcessAction(saveConfigAction(createUserConfig(this.state.configToSaveName, this.state.config)));
             NotificationManager.info('Configuration saved!');
-            this.setState({ configToSaveName: '' });
+            this.setState({configToSaveName: ''});
         }
-    }
+    };
 
-    handleChange = evt => {
+    handleChange = (evt: any) => {
         let changedHtml = evt.target.value;
         this.setState({
             result: this.processHtml(changedHtml),
@@ -49,22 +53,22 @@ class ObfuscationOutput extends Component {
         }
     }
 
-    isConfigurationChanged(oldConfig, newConfig) {
+    isConfigurationChanged(oldConfig: any, newConfig: any) {
         return oldConfig != null && newConfig != null && (oldConfig.choosenAlgorithm.value !== newConfig.choosenAlgorithm.value);
     }
 
-    processHtml(html) {
+    processHtml(html: string) {
         let result = null;
         switch (this.props.config.choosenAlgorithm) {
             case AlgorithmType.HTML_TO_JAVASCRIPT:
                 let htmlToJs = htmlToJavascript(html);
                 result =
-                    `document.write(eval('${htmlToJs}'))`
+                    `document.write(eval('${htmlToJs}'))`;
                 break;
             case AlgorithmType.HTML_TO_BASE64:
                 let encodedHtml = btoa(escape(html));
                 result =
-                    `document.write(unescape(atob('${encodedHtml}')) `
+                    `document.write(unescape(atob('${encodedHtml}')) `;
                 break;
             case AlgorithmType.HTML_TO_HEX:
                 let hex = toHex(html);
@@ -79,12 +83,12 @@ class ObfuscationOutput extends Component {
             case AlgorithmType.HTML_ESCAPE_CHARACTERS:
                 let escapedHtml = escape(html);
                 result =
-                    `document.write(unescape('${escapedHtml}'))`
+                    `document.write(unescape('${escapedHtml}'))`;
                 break;
             case AlgorithmType.HTML_ENCODE_WITH_OWN_FUN:
                 let customEncoding = encodeUsingOwnFunction(html);
                 result =
-                    `document.write(ownDecodingFunction('${customEncoding}'))`
+                    `document.write(ownDecodingFunction('${customEncoding}'))`;
                 break;
             default:
                 console.log("Not implemented method for obfuscation algorithm!");
@@ -93,29 +97,31 @@ class ObfuscationOutput extends Component {
     }
 
     onClickTextarea() {
-        this.setState({ html: this.state.html + " " })
+        this.setState({html: this.state.html + " "})
     }
 
-    updateConfigToSaveName = (evt) => {
+    updateConfigToSaveName = (evt: any) => {
         this.setState({
             configToSaveName: evt.target.value
         });
-    }
+    };
 
     render() {
         return (
             <div>
-                <NotificationContainer />
+                <NotificationContainer/>
                 <Container>
-                    <Row style={{ marginTop: 5 }}>
+                    <Row style={{marginTop: 5}}>
                         <Col sm={8}>
 
                         </Col>
                         <Col sm={2}>
-                            <Input type="text" placeholder="Enter config name..." value={this.state.configToSaveName} onChange={this.updateConfigToSaveName} />
+                            <Input type="text" placeholder="Enter config name..." value={this.state.configToSaveName}
+                                   onChange={this.updateConfigToSaveName}/>
                         </Col>
                         <Col sm={2}>
-                            <Button type="button" className="btn btn-info" onClick={this.saveConfiguration} disabled={this.state.configToSaveName.length === 0}>Save configuration</Button>
+                            <Button type="button" className="btn btn-info" onClick={this.saveConfiguration}
+                                    disabled={this.state.configToSaveName.length === 0}>Save configuration</Button>
                         </Col>
                     </Row>
                     <Row>
@@ -128,9 +134,10 @@ class ObfuscationOutput extends Component {
                     </Row>
                     <Row>
                         <Col sm={6}>
-                            <Input value={this.state.html} type="textarea" style={{ height: '510px' }} onChange={this.handleChange} />
+                            <Input value={this.state.html} type="textarea" style={{height: '510px'}}
+                                   onChange={this.handleChange}/>
                         </Col>
-                        <Col sm={6} style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+                        <Col sm={6} style={{wordWrap: 'break-word', whiteSpace: 'pre-wrap'}}>
                             {this.state.result}
                         </Col>
                     </Row>

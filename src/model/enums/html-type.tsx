@@ -1,13 +1,13 @@
 const HtmlType = [
-    {'id':1, 'value':'Generate'},
-    {'id':2, 'value':'Load file'}
-]
+    {'id': 1, 'value': 'Generate'},
+    {'id': 2, 'value': 'Load file'}
+];
 
 export function getGenerateType() {
     return 1;
 }
 
-export function getLoadFileType(){
+export function getLoadFileType() {
     return 2;
 }
 

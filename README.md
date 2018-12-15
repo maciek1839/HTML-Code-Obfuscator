@@ -28,7 +28,10 @@ An academic project based on ReactJS and Redux (any external library wasn't used
 https://facebook.github.io/create-react-app/docs/adding-typescript
 
 1. npm install --save typescript @types/node @types/react @types/react-dom @types/jest
-2. 
+2. install types for external libraries! for example "@types/reactstrap"
+    - if the library does not have types, create custom module with types for partciular library (see modules package)
+3. Create properties/states for components according to Component interface (react.Component<P,S>)
+4. Changes other file extensions from .js to tsx (optional)
 
 ### Links
 [reactstrap library](https://reactstrap.github.io/components)

@@ -1,17 +1,17 @@
-export function loadTemplate(name) {
+export function loadTemplate(name: string) {
     let loadedTemplate = null;
     let file = `html-templates/${name}`;
     let request = new XMLHttpRequest();
     request.open("GET", file, false);
     request.send(null);
     if (request.status === 200) {
-      loadedTemplate = request.responseText;
+        loadedTemplate = request.responseText;
     }
     return loadedTemplate;
-  }
+}
 
 
-  export const FileName={
-        EXAMPLE1: 'example.html',
-        EXAMPLE2: 'example2.html'
-  }
+export const FileName = {
+    EXAMPLE1: 'example.html',
+    EXAMPLE2: 'example2.html'
+};

@@ -1,44 +1,46 @@
-export const setAlgorithm = algorithmId => {
+import {Action} from "./actions";
+
+export const setAlgorithm:((_:any)=>Action) = (algorithmId:any) => {
     return {
         type: ConfigFormActions.SET_ALGORITHM,
         payload: algorithmId
     };
 };
 
-export const setHtmlType = htmlType => {
+export const setHtmlType:((_:any)=>Action) = (htmlType:any) => {
     return {
         type: ConfigFormActions.SET_HTML_TYPE,
         payload: htmlType
     };
 };
 
-export const setHtmlFile = file => {
+export const setHtmlFile:((_:any)=>Action) = (file:any) => {
     return {
         type: ConfigFormActions.SET_HTML_FILE,
         payload: file
     };
-}
+};
 
-export const showGenerateHtmlModal = () => {
+export const showGenerateHtmlModal:((_:any)=>Action) = () => {
     return {
         type: ConfigFormActions.SHOW_GENERATE_HTML_MODAL,
         payload: null
     };
-}
+};
 
-export const showResult = () => {
+export const showResult:(()=>Action) = () => {
     return {
         type: ConfigFormActions.SHOW_RESULT,
         payload: null
     };
-}
+};
 
-export const loadConfigAction = (config) => {
+export const loadConfigAction:((_:any)=>Action) = (config:any) => {
     return {
         type: ConfigFormActions.LOAD_CONFIG,
         payload: config
     };
-}
+};
 
 
 export const ConfigFormActions = {
@@ -48,4 +50,4 @@ export const ConfigFormActions = {
     SHOW_GENERATE_HTML_MODAL: 'SHOW_GENERATE_HTML_MODAL',
     SHOW_RESULT: 'SHOW_RESULT',
     LOAD_CONFIG: 'LOAD_CONFIG'
-}
+};

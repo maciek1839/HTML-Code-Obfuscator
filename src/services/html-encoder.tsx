@@ -5,7 +5,7 @@
  * 
  * @param {html page in UTF-8 encoding} html 
  */
-export function toHtmlEntities(html) {
+export function toHtmlEntities(html:any) {
     var buf = [];
 
     for (var i = html.length - 1; i >= 0; i--) {
@@ -15,35 +15,35 @@ export function toHtmlEntities(html) {
     return buf.join('');
 }
 
-export function fromHtmlEntities(str) {
+export function fromHtmlEntities(str:string) {
     return str.replace(/&#(\d+);/g, function (match, dec) {
         return String.fromCharCode(dec);
     });
 }
 
-export function htmlToJavascript(html) {
+export function htmlToJavascript(html:string) {
     return html.split("\n")
         .reduce((current, line) => current += `'${line}' +` + '\n', '');
 }
 
-export function toHex(s) {
+export function toHex(s:string) {
     s = escape(s);
-    let result = ''
+    let result = '';
     for (let i = 0; i < s.length; i++) {
         result += s.charCodeAt(i).toString(16)
     }
     return result;
 }
 
-export function fromHex(h) {
-    var s = ''
+export function fromHex(h:string) {
+    var s = '';
     for (var i = 0; i < h.length; i += 2) {
         s += String.fromCharCode(parseInt(h.substr(i, 2), 16))
     }
     return unescape(s);
 }
 
-export function encodeUsingOwnFunction(s) {
+export function encodeUsingOwnFunction(s:string) {
     let htmlEntities = toHtmlEntities(s);
     let result = '';
     for (let i = 0; i < htmlEntities.length; i++) {
@@ -55,11 +55,10 @@ export function encodeUsingOwnFunction(s) {
         }
         else { result += String.fromCharCode(s.charCodeAt(i) - 1); }
     }
-    // console.log(decodeUsingOwnFunction(result));
     return result;
 }
 
-export function decodeUsingOwnFunction(s) {
+export function decodeUsingOwnFunction(s:string) {
     let result = '';
     for (let i = 0; i < s.length; i++) {
         if (s === '&') {

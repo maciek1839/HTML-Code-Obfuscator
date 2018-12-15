@@ -1,12 +1,18 @@
-import React, { Component } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label } from 'reactstrap';
-import { closeModal } from "../actions/generate-html-modal-action";
-import { prepareHtmlConfig } from "../services/html-generator-service"
-import { generateHtml } from "../actions/generate-html-modal-action"
+import React, {Component} from "react";
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from 'reactstrap';
+import {closeModal} from "../actions/generate-html-modal-action";
+import {prepareHtmlConfig} from "../services/html-generator-service"
+import {generateHtml} from "../actions/generate-html-modal-action"
 
-class GenerateHtmlModal extends Component {
+export interface GenerateHtmlModalProps {
+    showHtmlTemplateModal: any,
+    callbackProcessAction: any,
+    className?:any
+}
 
-    constructor(props) {
+class GenerateHtmlModal extends Component<GenerateHtmlModalProps, any> {
+
+    constructor(props: GenerateHtmlModalProps) {
         super(props);
         this.state = {
             sections: 1,
@@ -18,7 +24,7 @@ class GenerateHtmlModal extends Component {
 
     handleClose = () => {
         this.props.callbackProcessAction(closeModal());
-    }
+    };
 
     handleGenerate = () => {
         let htmlConfig = prepareHtmlConfig(
@@ -27,23 +33,23 @@ class GenerateHtmlModal extends Component {
             this.state.paragraphs,
             this.state.inputs);
         this.props.callbackProcessAction(generateHtml(htmlConfig))
-    }
+    };
 
-    change(event, type) {
+    change(event:any, type:any) {
         if (event.target.value >= 0) {
             switch (type) {
                 case 'Headers':
-                    this.setState({ headers: event.target.value });
+                    this.setState({headers: event.target.value});
                     break;
                 case 'Paragraphs':
-                    this.setState({ paragraphs: event.target.value });
+                    this.setState({paragraphs: event.target.value});
                     break;
                 case 'Inputs':
-                    this.setState({ inputs: event.target.value });
+                    this.setState({inputs: event.target.value});
                     break;
                 case 'Sections':
-                    if(event.target.value>0){
-                        this.setState({ sections: event.target.value });
+                    if (event.target.value > 0) {
+                        this.setState({sections: event.target.value});
                     }
                     break;
             }
@@ -58,13 +64,17 @@ class GenerateHtmlModal extends Component {
                 <ModalBody>
                     <p>Choose HTML elements for generated HTML.</p>
                     <Label>Sections</Label>
-                    <Input type='number' label='Sections' value={this.state.sections} onChange={e => this.change(e, 'Sections')} />
+                    <Input type='number'  value={this.state.sections}
+                           onChange={e => this.change(e, 'Sections')}/>
                     <Label>Headers</Label>
-                    <Input type='number' label='Headers' value={this.state.headers} onChange={e => this.change(e, 'Headers')} />
+                    <Input type='number' value={this.state.headers}
+                           onChange={e => this.change(e, 'Headers')}/>
                     <Label>Paragraphs</Label>
-                    <Input type='number' label='Paragraphs' value={this.state.paragraphs} onChange={e => this.change(e, 'Paragraphs')} />
+                    <Input type='number' value={this.state.paragraphs}
+                           onChange={e => this.change(e, 'Paragraphs')}/>
                     <Label>Inputs</Label>
-                    <Input type='number' label='Inputs' value={this.state.inputs} onChange={e => this.change(e, 'Inputs')} />
+                    <Input type='number' value={this.state.inputs}
+                           onChange={e => this.change(e, 'Inputs')}/>
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={this.handleGenerate}>Generate</Button>{' '}

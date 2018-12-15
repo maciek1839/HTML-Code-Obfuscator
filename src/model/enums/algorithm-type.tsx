@@ -1,5 +1,17 @@
+export class ObfuscationAlgorithm {
+    constructor(name: string, value: string, details: any) {
+        this.name = name;
+        this.value = value;
+        this.details = details;
+    }
 
-export function getDefaultAlgorithms() {
+    name: string;
+    value: string;
+    details: any;
+}
+
+
+export function getDefaultAlgorithms(): ObfuscationAlgorithm[] {
     return [
         {
             name: 'Html to Javascript',
@@ -77,9 +89,9 @@ export const AlgorithmType = {
     HTML_TO_HTML_ENTITIES: '4',
     HTML_ESCAPE_CHARACTERS: '5',
     HTML_ENCODE_WITH_OWN_FUN: '6'
-}
+};
 
-export function getAlgorithm(id) {
+export function getAlgorithm(id: string) {
     let result = getDefaultAlgorithms().filter(e => e.value === id);
     return result.length > 0 ? result[0] : null;
 }
