@@ -4,25 +4,29 @@ An academic project based on ReactJS and Redux (any external library wasn't used
 
 ## Technology stack
 - React.js
-- bootstrap 4 (library reactstrap dedicated for ReactJS)
+- Typescript
+- Bootstrap 4 (library `reactstrap` dedicated for ReactJS)
 
 ## Project
 ### Structure
-├───docs
-├───public
-├───src
-    ├───actions
-    ├───components
-    ├───model
-    ├───reducers
-    └───services
-
+```
+├───docs  
+├───public  
+├───src  
+    ├───actions  
+    ├───components  
+    ├───model  
+    ├───modules  
+    ├───reducers  
+    ├───services
+    └───utils   
+```
 ### Coding convention
-- file names should be lowecase and with dash instead of space
+- file names should be lowercase and with dash instead of space
 
 ## Application flow
 
-![Redux](./docs/redux.png =100x250 "Redux concept")
+![Redux](./docs/redux.png "Redux concept")
 
 ## Add Typescript to existing React project
 https://facebook.github.io/create-react-app/docs/adding-typescript
@@ -38,3 +42,6 @@ https://facebook.github.io/create-react-app/docs/adding-typescript
 
 ---
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+### TODOs
+- Redux library (`react-redux`)
