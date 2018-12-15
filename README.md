@@ -24,6 +24,12 @@ An academic project based on ReactJS and Redux (any external library wasn't used
 
 ![Redux](./docs/redux.png =100x250 "Redux concept")
 
+## Add Typescript to existing React project
+https://facebook.github.io/create-react-app/docs/adding-typescript
+
+1. npm install --save typescript @types/node @types/react @types/react-dom @types/jest
+2. 
+
 ### Links
 [reactstrap library](https://reactstrap.github.io/components)
 
