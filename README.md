@@ -2,6 +2,11 @@
 
 An academic project based on ReactJS and Redux (any external library wasn't used).
 
+## Startup (from root dir)
+
+- npm install
+- npm start
+
 ## Technology stack
 - React.js
 - Typescript
