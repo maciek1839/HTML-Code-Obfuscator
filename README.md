@@ -1,11 +1,12 @@
 # HTML Obfuscator
 
 An academic project based on ReactJS and Redux (any external library wasn't used).
-
-## Startup (from root dir)
-
+If you want to develop app, use commands:
 - npm install
-- npm start
+- npm start  
+
+If you want to build application and get static files, use:
+- npm run build
 
 ## Technology stack
 - React.js
