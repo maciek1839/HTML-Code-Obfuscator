@@ -53,13 +53,23 @@ class ObfuscationOutput extends Component<ObfuscationOutputProps, any> {
         }
     }
 
+    componentWillReceiveProps(props:any) {
+        if(this.state.config!=null && props.config!=null){
+            this.setState({
+                config: this.props.config,
+                result: this.processHtml(this.props.config.html, props.config.choosenAlgorithm)
+            });
+
+        }
+    }
+
     isConfigurationChanged(oldConfig: any, newConfig: any) {
         return oldConfig != null && newConfig != null && (oldConfig.choosenAlgorithm.value !== newConfig.choosenAlgorithm.value);
     }
 
-    processHtml(html: string) {
+    processHtml(html: string, algorithmType:string=this.props.config.choosenAlgorithm) {
         let result = null;
-        switch (this.props.config.choosenAlgorithm) {
+        switch (algorithmType) {
             case AlgorithmType.HTML_TO_JAVASCRIPT:
                 let htmlToJs = htmlToJavascript(html);
                 result =
