@@ -1,0 +1,26 @@
+image: node:10.16.0-slim
+
+before_script:
+  - echo ':before_script'
+  - cat /etc/os-release
+  - npm --version
+  - node --version
+  - npm install
+  - echo 'end :before_script'
+
+cache:
+  untracked: true
+  paths:
+    - node_modules/
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 day
