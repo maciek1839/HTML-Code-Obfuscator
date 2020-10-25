@@ -1,20 +1,12 @@
 import React, {Component} from 'react';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'react-notifications/lib/notifications.css';
-import {Container, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col} from 'reactstrap';
+import './App.scss';
+import {Col, Container, Nav, NavItem, NavLink, Row, TabContent, TabPane} from 'reactstrap';
 import classnames from 'classnames';
 import ConfigurationForm from "./components/config-form";
 import HTMLPreview from "./components/html-preview";
 import SettingsTab from "./components/settings-tab";
 import ObfuscationOutput from "./components/obfuscation-output";
-import {
-    algorithmReducer,
-    htmlTypeReducer,
-    htmlTypeFileReducer,
-    showResultReducer,
-    loadConfigReducer
-} from "./reducers/config-form-reducer";
+import {algorithmReducer, htmlTypeFileReducer, htmlTypeReducer, loadConfigReducer, showResultReducer} from "./reducers/config-form-reducer";
 import {EntryProps, EntryState, getInitialState} from "./model/app-initial-state"
 import {ConfigFormActions} from "./actions/config-form"
 import {GenerateHtmlModalActions} from "./actions/generate-html-modal-action";
