@@ -1,4 +1,5 @@
 import {Action} from "./action";
+import {HtmlConfig} from '../services/html-generator-service';
 
 export const closeModal: (() => Action) = () => {
   return {
@@ -7,7 +8,7 @@ export const closeModal: (() => Action) = () => {
   };
 };
 
-export const generateHtml: ((_: any) => Action) = (htmlConfig: any) => {
+export const generateHtml: ((_: any) => Action) = (htmlConfig: HtmlConfig) => {
   return {
     type: GenerateHtmlModalActions.GENERATE_HTML,
     payload: htmlConfig

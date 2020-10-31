@@ -6,26 +6,39 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 import {AlgorithmType} from "../model/algorithms/algorithm-type";
 import ConfigurationService from '../services/configuration-service';
 import HtmlEncoderService from '../services/html-encoder-service';
+import ConfigurationFactory from '../factories/configuration-factory';
+import {ObfuscationConfig} from '../model/configs/obfuscation-config';
 
 export interface ObfuscationOutputProps {
   callbackProcessAction: any;
-  config: any;
+  config: ObfuscationConfig;
 }
 
-class ObfuscationOutput extends Component<ObfuscationOutputProps, any> {
+export interface ObfuscationOutputState {
+  config?: ObfuscationConfig,
+  configToSaveName: string
+  html: string,
+  readyToEdit: boolean,
+  result: string,
+}
+
+
+class ObfuscationOutput extends Component<ObfuscationOutputProps, ObfuscationOutputState> {
+
+  private readonly htmlEncoderService: HtmlEncoderService = new HtmlEncoderService();
 
   constructor(props: ObfuscationOutputProps) {
     super(props);
     this.state = {
       html: '',
       result: '',
-      config: null,
       readyToEdit: false,
       configToSaveName: ''
     }
   }
 
   componentDidUpdate() {
+    console.log(this.props);
     if (this.props.config !== null && (this.state.html === '' || this.isConfigurationChanged(this.state.config, this.props.config))) {
       this.setState({
         html: htmlBeautify(this.props.config.html),
@@ -53,19 +66,15 @@ class ObfuscationOutput extends Component<ObfuscationOutputProps, any> {
     });
   };
 
-  isConfigurationChanged(oldConfig: any, newConfig: any) {
-    return oldConfig != null && newConfig != null && (oldConfig.choosenAlgorithm.value !== newConfig.choosenAlgorithm.value);
+  isConfigurationChanged(oldConfig: ObfuscationConfig, newConfig: ObfuscationConfig) {
+    return oldConfig && newConfig && (oldConfig.algorithmType !== newConfig.algorithmType);
   }
 
-  onClickTextarea() {
-    this.setState({html: this.state.html + " "})
-  }
-
-  processHtml(html: string, algorithmType: string = this.props.config.choosenAlgorithm) {
+  processHtml(html: string, algorithmType: number = this.props.config.algorithmType) {
     let result = null;
     switch (algorithmType) {
       case AlgorithmType.HTML_TO_JAVASCRIPT:
-        let htmlToJs = HtmlEncoderService.htmlToJavascript(html);
+        let htmlToJs = this.htmlEncoderService.htmlToJavascript(html);
         result =
           `document.write(eval('${htmlToJs}'))`;
         break;
@@ -75,12 +84,12 @@ class ObfuscationOutput extends Component<ObfuscationOutputProps, any> {
           `document.write(unescape(atob('${encodedHtml}')) `;
         break;
       case AlgorithmType.HTML_TO_HEX:
-        let hex = HtmlEncoderService.toHex(html);
+        let hex = this.htmlEncoderService.toHex(html);
         result =
           `document.write(fromHex('${hex}'))`;
         break;
       case AlgorithmType.HTML_TO_HTML_ENTITIES:
-        let ascii = HtmlEncoderService.toHtmlEntities(html);
+        let ascii = this.htmlEncoderService.toHtmlEntities(html);
         result =
           `document.write(fromHtmlEntities('${ascii}'))`;
         break;
@@ -90,7 +99,7 @@ class ObfuscationOutput extends Component<ObfuscationOutputProps, any> {
           `document.write(unescape('${escapedHtml}'))`;
         break;
       case AlgorithmType.HTML_ENCODE_WITH_OWN_FUN:
-        let customEncoding = HtmlEncoderService.encodeUsingOwnFunction(html);
+        let customEncoding = this.htmlEncoderService.encodeUsingOwnFunction(html);
         result =
           `document.write(ownDecodingFunction('${customEncoding}'))`;
         break;
@@ -146,7 +155,7 @@ class ObfuscationOutput extends Component<ObfuscationOutputProps, any> {
     } else {
       this.props.callbackProcessAction(
         saveConfigAction(
-          ConfigurationService.createUserConfig(this.state.configToSaveName, this.state.config)
+          ConfigurationFactory.createUserConfig(this.state.configToSaveName, this.state.config)
         )
       );
       NotificationManager.info('Configuration saved!');

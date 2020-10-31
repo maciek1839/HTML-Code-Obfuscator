@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Button} from 'reactstrap';
-import {regenerateHtml} from "../actions/html-preview-actions";
+import {regenerateHtml} from "../../actions/html-preview-actions";
+import "./HtmlPreview.scss";
 
 export interface HtmlPreviewProps {
   callbackProcessAction: any;
@@ -27,9 +28,9 @@ class HTMLPreview extends Component<HtmlPreviewProps, any> {
 
   render() {
     return (
-      <div style={{position: "relative"}}>
+      <div className="preview-wrapper">
         {this.props.htmlConfig !== null ?
-          <Button style={{position: "absolute", top: "0px", right: "0px"}} color="primary"
+          <Button className="preview-generate-btn" color="primary"
                   onClick={this.generateAgain}>Generate again</Button> : null}
         <div ref='preview'>...</div>
       </div>

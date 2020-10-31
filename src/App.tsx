@@ -2,11 +2,17 @@ import React, {Component} from 'react';
 import './App.scss';
 import {Col, Container, Nav, NavItem, NavLink, Row, TabContent, TabPane} from 'reactstrap';
 import classnames from 'classnames';
-import ConfigurationForm from "./components/config-form";
-import HTMLPreview from "./components/html-preview";
+import ConfigurationForm from "./components/config-form/config-form";
+import HTMLPreview from "./components/html-preview/html-preview";
 import SettingsTab from "./components/settings-tab";
 import ObfuscationOutput from "./components/obfuscation-output";
-import {algorithmReducer, htmlTypeFileReducer, htmlTypeReducer, loadConfigReducer, showResultReducer} from "./reducers/config-form-reducer";
+import {
+  algorithmReducer,
+  htmlFileTypeReducer,
+  htmlTypeFileReducer,
+  loadConfigReducer,
+  showResultReducer
+} from "./reducers/config-form-reducer";
 import {ApplicationState, AppProps, getInitialState} from "./state/application-state"
 import {ConfigFormActions} from "./actions/config-form"
 import {GenerateHtmlModalActions} from "./actions/generate-html-modal-action";
@@ -37,7 +43,7 @@ class App extends Component<AppProps, ApplicationState> {
         this.setState(newState);
         break;
       case ConfigFormActions.SET_HTML_TYPE:
-        newState = htmlTypeReducer(this.state, action.payload);
+        newState = htmlFileTypeReducer(this.state, action.payload);
         this.setState(newState);
         break;
       case ConfigFormActions.SET_HTML_FILE:
@@ -77,7 +83,7 @@ class App extends Component<AppProps, ApplicationState> {
     return (
       <Container>
         <div>
-          <header className="App">
+          <header>
             <h1>HTML obfuscator</h1>
           </header>
           <Nav tabs>
@@ -130,7 +136,7 @@ class App extends Component<AppProps, ApplicationState> {
           <TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="1">
               <Row>
-                <Col sm="12">
+                <Col>
                   <ConfigurationForm
                     algorithms={this.state.algorithms}
                     config={this.state.obfuscationConfig}
@@ -142,7 +148,7 @@ class App extends Component<AppProps, ApplicationState> {
             </TabPane>
             <TabPane tabId="2">
               <Row>
-                <Col sm="12">
+                <Col>
                   <HTMLPreview
                     previewHtml={this.state.obfuscationConfig.html}
                     callbackProcessAction={(e: any) => this.myGlobalReducer(e)}
@@ -153,7 +159,7 @@ class App extends Component<AppProps, ApplicationState> {
             </TabPane>
             <TabPane tabId="3">
               <Row>
-                <Col sm="12">
+                <Col>
                   <ObfuscationOutput
                     config={this.state.outputObfuscationConfig}
                     callbackProcessAction={(e: any) => this.myGlobalReducer(e)}
@@ -163,7 +169,7 @@ class App extends Component<AppProps, ApplicationState> {
             </TabPane>
             <TabPane tabId="4">
               <Row>
-                <Col sm="12">
+                <Col>
                   <SettingsTab/>
                 </Col>
               </Row>

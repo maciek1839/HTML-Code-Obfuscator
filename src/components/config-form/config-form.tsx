@@ -1,13 +1,15 @@
 import React, {ChangeEvent, Component} from "react";
-import HtmlTypes, {getLoadFileType} from '../model/html-types';
-import {loadConfigAction, setAlgorithm, setHtmlFile, setHtmlType, showResult} from '../actions/config-form';
-import {Button, Col, Collapse, Container, Form, FormGroup, Input, Label, ListGroup, ListGroupItem} from 'reactstrap';
-import GenerateHtmlModal from "./generate-html-modal";
+import HtmlTypes, {HtmlFileType} from '../../model/html-types';
+import {loadConfigAction, setAlgorithm, setHtmlFile, setHtmlType, showResult} from '../../actions/config-form';
+import {Button, Col, Container, Form, FormGroup, Input, Label} from 'reactstrap';
+import GenerateHtmlModal from "../generate-html-modal";
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import AlgorithmService from '../services/algorithm-service';
-import ConfigurationService from '../services/configuration-service';
-import {ObfuscationAlgorithm} from '../model/algorithms/obfuscation-algorithm';
-import {ObfuscationConfig} from '../model/configs/obfuscation-config';
+import AlgorithmService from '../../services/algorithm-service';
+import ConfigurationService from '../../services/configuration-service';
+import {ObfuscationAlgorithm} from '../../model/algorithms/obfuscation-algorithm';
+import {ObfuscationConfig} from '../../model/configs/obfuscation-config';
+import ConfigurationFactory from '../../factories/configuration-factory';
+import AlgorithmDetailsView from './algorithm-details-view/algorithm-details-view';
 
 export interface ConfigurationFormProps {
   algorithms: ObfuscationAlgorithm[];
@@ -16,31 +18,24 @@ export interface ConfigurationFormProps {
   showHtmlTemplateModal: boolean;
 }
 
-interface ConfigurationFormState {
-  showAlgorithmDetails: boolean
-}
+class ConfigurationForm extends Component<ConfigurationFormProps> {
 
-class ConfigurationForm extends Component<ConfigurationFormProps, ConfigurationFormState> {
-
-  constructor(props: ConfigurationFormProps) {
+  constructor(props: Readonly<ConfigurationFormProps>) {
     super(props);
-    this.state = {
-      showAlgorithmDetails: false
-    };
   }
 
   handleChangeAlgorithms = (event: ChangeEvent<HTMLInputElement>) => {
-    let newChosenAlgorithm = event.target.value;
+    let newChosenAlgorithm = Number(event.target.value);
     this.props.callbackProcessAction(setAlgorithm(newChosenAlgorithm));
   };
 
   handleChangeHtmlType = (event: ChangeEvent<HTMLInputElement>) => {
-    let newHtmlType = event.target.value;
+    let newHtmlType = Number(event.target.value);
     this.props.callbackProcessAction(setHtmlType(newHtmlType));
   };
 
   handleLoadConfig = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.trim().length>0) {
+    if (event.target.value.trim().length > 0) {
       let preservedConfig = JSON.parse(event.target.value);
       this.props.callbackProcessAction(loadConfigAction(preservedConfig.config));
       NotificationManager.success('Successfully load config!', preservedConfig.name);
@@ -60,18 +55,11 @@ class ConfigurationForm extends Component<ConfigurationFormProps, ConfigurationF
     reader.readAsText(file, "UTF-8");
   };
 
-  openCloseDetails = () => {
-    this.setState({
-      showAlgorithmDetails: !this.state.showAlgorithmDetails
-    });
-  };
-
   render() {
     let config = this.props.config;
-    let selectedAlgorithmInputIndex = config.chosenAlgorithm ? config.chosenAlgorithm.type : 0;
-    let algorithmDetails = AlgorithmService.getAlgorithm(selectedAlgorithmInputIndex);
-    let selectedHtml = config.chosenHtml != null ? parseInt(config.chosenHtml) : 0;
-    let isDisabledSubmit = !(config && selectedAlgorithmInputIndex && selectedHtml != null && config.html);
+    let algorithmHtmlSelectValue = config.algorithmType != null ? config.algorithmType : 0;
+    let algorithmDetails = config.algorithmType ? AlgorithmService.getAlgorithm(config.algorithmType) : undefined;
+    let htmlSelectValue = config.htmlFileType != null ? config.htmlFileType : 0;
     return (
       <Container>
         <NotificationContainer/>
@@ -89,13 +77,13 @@ class ConfigurationForm extends Component<ConfigurationFormProps, ConfigurationF
                 <option key={0} value={null}>&nbsp;</option>
                 <option key={1} value={null} disabled={true}>default</option>
                 {
-                  ConfigurationService.getDefaultConfiguration().map(elem =>
+                  ConfigurationFactory.getDefaultConfiguration().map(elem =>
                     <option key={elem.name} value={JSON.stringify(elem)}>{elem.name}</option>
                   )
                 }
                 <option key={2} value={null} disabled={true}>saved</option>
                 {
-                  ConfigurationService.getConfigs().map(elem=>
+                  ConfigurationService.loadConfigs().map(elem =>
                     <option key={elem.name} value={JSON.stringify(elem)}>{elem.name}</option>
                   )
                 }
@@ -105,47 +93,38 @@ class ConfigurationForm extends Component<ConfigurationFormProps, ConfigurationF
           <FormGroup row className="element-m-spacing-t">
             <Label sm={2}>Algorithm</Label>
             <Col sm={10}>
-              <Input value={selectedAlgorithmInputIndex} type="select" name="select"
+              <Input value={algorithmHtmlSelectValue} type="select"
                      onChange={this.handleChangeAlgorithms}>
                 <option key={0} value={null}>&nbsp;</option>
-                {this.props.algorithms.map((item: any) =>
+                {this.props.algorithms.map((item: ObfuscationAlgorithm) =>
                   <option key={item.type} value={item.type}>{item.name}</option>
                 )}
               </Input>
             </Col>
           </FormGroup>
-          {algorithmDetails ? <FormGroup>
-            <Col sm={{size: 2, offset: 10}}>
-              <Button color="primary" onClick={this.openCloseDetails} style={{marginBottom: '1rem'}}>Show
-                                                                                                     details</Button>
-            </Col>
-            <Collapse isOpen={this.state.showAlgorithmDetails}>
-              <ListGroup flush>
-                {algorithmDetails.details.steps.map((step: any, index: any) =>
-                  <ListGroupItem key={index}>{index + 1}. {step}</ListGroupItem>
-                )}
-              </ListGroup>
-            </Collapse>
-          </FormGroup> : null}
-
+          <FormGroup row>
+            <AlgorithmDetailsView algorithm={algorithmDetails}/>
+          </FormGroup>
           <FormGroup row>
             <Label sm={2}>HTML to obfuscate</Label>
             <Col sm={10}>
-              <Input value={selectedHtml} type="select" name="select"
+              <Input value={htmlSelectValue} type="select"
                      onChange={this.handleChangeHtmlType}>
                 <option key={0} value={null}>&nbsp;</option>
                 {this.renderHtmlTypesList()}
               </Input>
             </Col>
             <Col sm={12}>
-              {selectedHtml === getLoadFileType() ?
+              {htmlSelectValue === HtmlFileType.LOAD_FILE ?
                 <Input type="file" label="File" onChange={this.handleUserFile}/>
                 : null}
             </Col>
           </FormGroup>
-          <FormGroup check row>
+          <FormGroup row>
             <Col sm={{size: 2, offset: 10}}>
-              <Button type="button" disabled={isDisabledSubmit} className="btn btn-success"
+              <Button type="button"
+                      disabled={!ConfigurationFactory.isConfigurationComplete(this.props.config)}
+                      className="btn btn-success"
                       onClick={this.handleSubmit}>Submit</Button>
             </Col>
           </FormGroup>

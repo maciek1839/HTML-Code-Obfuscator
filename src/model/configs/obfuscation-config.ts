@@ -1,8 +1,10 @@
-import {ObfuscationAlgorithm} from '../algorithms/obfuscation-algorithm';
+import {AlgorithmType} from '../algorithms/algorithm-type';
+import {HtmlFileType} from '../html-types';
+import {HtmlConfig} from '../../services/html-generator-service';
 
 export interface ObfuscationConfig {
-  chosenAlgorithm: ObfuscationAlgorithm | null;
-  chosenHtml: any;
-  html: any;
-  htmlConfig: any;
+  algorithmType?: AlgorithmType;
+  html?: string;
+  htmlConfig?: HtmlConfig;
+  htmlFileType?: HtmlFileType;
 }

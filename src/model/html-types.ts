@@ -3,17 +3,14 @@ export interface KeyValue {
   value: any
 }
 
+export enum HtmlFileType {
+  GENERATE = 1,
+  LOAD_FILE = 2
+}
+
 const HtmlTypes = [
-  {key: 1, value: 'Generate'},
-  {key: 2, value: 'Load file'}
+  {key: HtmlFileType.GENERATE, value: 'Generate'},
+  {key: HtmlFileType.LOAD_FILE, value: 'Load file'}
 ];
-
-export function getGenerateType() {
-  return 1;
-}
-
-export function getLoadFileType() {
-  return 2;
-}
 
 export default HtmlTypes;

@@ -8,22 +8,26 @@
   margin: 0 $DEFAULT_ELEMENT_SPACING;
 }
 
-.element-m-spacing-v{
+.element-m-spacing-v {
   margin: $DEFAULT_ELEMENT_SPACING 0;
 }
 
-.element-m-spacing-t{
+.element-m-spacing-t {
   margin-top: $DEFAULT_ELEMENT_SPACING;
 }
 
-.element-p-spacing-none{
+.element-m-spacing-b {
+  margin-bottom: $DEFAULT_ELEMENT_SPACING;
+}
+
+.element-p-spacing-none {
   padding: 0;
 }
 
-.element-p-spacing-h{
+.element-p-spacing-h {
   padding: 0 $DEFAULT_ELEMENT_SPACING;
 }
 
-.element-p-spacing-v{
+.element-p-spacing-v {
   padding: $DEFAULT_ELEMENT_SPACING 0;
 }

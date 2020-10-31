@@ -1,4 +1,4 @@
-import HtmlGeneratorFactory from './html-generator-factory';
+import HtmlGeneratorFactory from '../factories/html-generator-factory';
 
 export interface HtmlConfig {
   header: number;

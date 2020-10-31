@@ -10,7 +10,7 @@ class SettingsTab extends Component {
 
   render() {
     return (
-      <Container style={{marginTop: 5}}>
+      <Container className="element-m-spacing-t">
         <Row>
           <Label sm={10}>Clear saved configurations</Label>
           <Col sm={2}>

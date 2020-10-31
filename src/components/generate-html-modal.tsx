@@ -4,38 +4,52 @@ import {closeModal, generateHtml} from "../actions/generate-html-modal-action";
 import HtmlGeneratorService from '../services/html-generator-service';
 
 export interface GenerateHtmlModalProps {
-  callbackProcessAction: any,
-  className?: any
-  showHtmlTemplateModal: any,
+  callbackProcessAction: any;
+  className?: string;
+  showHtmlTemplateModal: boolean;
 }
 
-class GenerateHtmlModal extends Component<GenerateHtmlModalProps, any> {
+export interface GenerateHtmlModalState {
+  headersNumber: number;
+  inputsNumber: number;
+  paragraphsNumber: number;
+  sectionsNumber: number;
+}
+
+enum HtmlNumberType {
+  HEADERS,
+  PARAGRAPHS,
+  INPUTS,
+  SECTIONS
+}
+
+class GenerateHtmlModal extends Component<GenerateHtmlModalProps, GenerateHtmlModalState> {
 
   constructor(props: GenerateHtmlModalProps) {
     super(props);
     this.state = {
-      sections: 1,
-      headers: 1,
-      paragraphs: 1,
-      inputs: 1
+      sectionsNumber: 1,
+      headersNumber: 1,
+      paragraphsNumber: 1,
+      inputsNumber: 1
     };
   }
 
   change(event: any, type: any) {
     if (event.target.value >= 0) {
       switch (type) {
-        case 'Headers':
-          this.setState({headers: event.target.value});
+        case HtmlNumberType.HEADERS:
+          this.setState({headersNumber: event.target.value});
           break;
-        case 'Paragraphs':
-          this.setState({paragraphs: event.target.value});
+        case HtmlNumberType.PARAGRAPHS:
+          this.setState({paragraphsNumber: event.target.value});
           break;
-        case 'Inputs':
-          this.setState({inputs: event.target.value});
+        case HtmlNumberType.INPUTS:
+          this.setState({inputsNumber: event.target.value});
           break;
-        case 'Sections':
+        case HtmlNumberType.SECTIONS:
           if (event.target.value > 0) {
-            this.setState({sections: event.target.value});
+            this.setState({sectionsNumber: event.target.value});
           }
           break;
       }
@@ -48,10 +62,10 @@ class GenerateHtmlModal extends Component<GenerateHtmlModalProps, any> {
 
   handleGenerate = () => {
     let htmlConfig = HtmlGeneratorService.prepareHtmlConfig(
-      this.state.sections,
-      this.state.headers,
-      this.state.paragraphs,
-      this.state.inputs);
+      this.state.sectionsNumber,
+      this.state.headersNumber,
+      this.state.paragraphsNumber,
+      this.state.inputsNumber);
     this.props.callbackProcessAction(generateHtml(htmlConfig))
   };
 
@@ -62,17 +76,17 @@ class GenerateHtmlModal extends Component<GenerateHtmlModalProps, any> {
         <ModalBody>
           <p>Choose HTML elements for generated HTML.</p>
           <Label>Sections</Label>
-          <Input type='number' value={this.state.sections}
-                 onChange={e => this.change(e, 'Sections')}/>
+          <Input type='number' value={this.state.sectionsNumber}
+                 onChange={e => this.change(e, HtmlNumberType.SECTIONS)}/>
           <Label>Headers</Label>
-          <Input type='number' value={this.state.headers}
-                 onChange={e => this.change(e, 'Headers')}/>
+          <Input type='number' value={this.state.headersNumber}
+                 onChange={e => this.change(e, HtmlNumberType.HEADERS)}/>
           <Label>Paragraphs</Label>
-          <Input type='number' value={this.state.paragraphs}
-                 onChange={e => this.change(e, 'Paragraphs')}/>
+          <Input type='number' value={this.state.paragraphsNumber}
+                 onChange={e => this.change(e, HtmlNumberType.PARAGRAPHS)}/>
           <Label>Inputs</Label>
-          <Input type='number' value={this.state.inputs}
-                 onChange={e => this.change(e, 'Inputs')}/>
+          <Input type='number' value={this.state.inputsNumber}
+                 onChange={e => this.change(e, HtmlNumberType.INPUTS)}/>
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={this.handleGenerate}>Generate</Button>{' '}

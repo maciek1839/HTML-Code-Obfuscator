@@ -1,5 +1,5 @@
 export default class HtmlEncoderService {
-  static decodeUsingOwnFunction(s: string) {
+  decodeUsingOwnFunction(s: string) {
     let result = '';
     for (let i = 0; i < s.length; i++) {
       if (s === '&') {
@@ -13,7 +13,7 @@ export default class HtmlEncoderService {
     return result;
   }
 
-  static encodeUsingOwnFunction(s: string) {
+  encodeUsingOwnFunction(s: string) {
     let htmlEntities = this.toHtmlEntities(s);
     let result = '';
     for (let i = 0; i < htmlEntities.length; i++) {
@@ -28,7 +28,7 @@ export default class HtmlEncoderService {
     return result;
   }
 
-  static fromHex(h: string) {
+  fromHex(h: string) {
     let s = '';
     for (let i = 0; i < h.length; i += 2) {
       s += String.fromCharCode(parseInt(h.substr(i, 2), 16))
@@ -36,18 +36,18 @@ export default class HtmlEncoderService {
     return unescape(s);
   }
 
-  static fromHtmlEntities(str: string) {
+  fromHtmlEntities(str: string) {
     return str.replace(/&#(\d+);/g, function (match, dec) {
       return String.fromCharCode(dec);
     });
   }
 
-  static htmlToJavascript(html: string) {
+  htmlToJavascript(html: string) {
     return html.split("\n")
       .reduce((current, line) => current += `'${line}' +` + '\n', '');
   }
 
-  static toHex(s: string) {
+  toHex(s: string) {
     s = escape(s);
     let result = '';
     for (let i = 0; i < s.length; i++) {
@@ -63,7 +63,7 @@ export default class HtmlEncoderService {
    *
    * @param {html page in UTF-8 encoding} html
    */
-  static toHtmlEntities(html: any) {
+  toHtmlEntities(html: any) {
     const buf = [];
 
     for (let i = html.length - 1; i >= 0; i--) {
