@@ -26,17 +26,17 @@ class AlgorithmDetailsView extends Component<AlgorithmDetailsViewProps, Algorith
   };
 
   render() {
-    return this.props.algorithm ? this.renderDetailsElement() : null
+    return this.props.algorithm ? this.renderDetailsElement() : null;
   };
 
   private renderDetailsElement(): JSX.Element {
-    return <FormGroup>
+    return <FormGroup row className="width-100">
       <Col sm={{size: 2, offset: 10}}>
         <Button color="primary" onClick={this.openCloseDetails} className="element-m-spacing-b">
           Show details
         </Button>
       </Col>
-      <Collapse isOpen={this.state.showDetails}>
+      <Collapse isOpen={this.state.showDetails} className="width-100">
         <ListGroup flush>
           {this.props.algorithm.details.steps.map((step: string, index: number) =>
             <ListGroupItem key={index}>{index + 1}. {step}</ListGroupItem>

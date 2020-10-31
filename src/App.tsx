@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import ConfigurationForm from "./components/config-form/config-form";
 import HTMLPreview from "./components/html-preview/html-preview";
 import SettingsTab from "./components/settings-tab";
-import ObfuscationOutput from "./components/obfuscation-output";
+import ObfuscationOutput from "./components/obfuscation-output/obfuscation-output";
 import {
   algorithmReducer,
   htmlFileTypeReducer,

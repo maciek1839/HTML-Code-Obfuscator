@@ -1,0 +1,9 @@
+.output-text {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.output-textarea {
+  /* It is necessary to overwrite Bootstrap's styles. */
+  height: 32rem !important;
+}

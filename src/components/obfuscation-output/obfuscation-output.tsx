@@ -1,13 +1,14 @@
 import React, {Component} from "react";
 import htmlBeautify from 'html-beautify'
 import {Button, Col, Container, Input, Row} from 'reactstrap';
-import {saveConfigAction} from "../actions/obfuscation-output-actions";
+import {saveConfigAction} from "../../actions/obfuscation-output-actions";
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import {AlgorithmType} from "../model/algorithms/algorithm-type";
-import ConfigurationService from '../services/configuration-service';
-import HtmlEncoderService from '../services/html-encoder-service';
-import ConfigurationFactory from '../factories/configuration-factory';
-import {ObfuscationConfig} from '../model/configs/obfuscation-config';
+import {AlgorithmType} from "../../model/algorithms/algorithm-type";
+import ConfigurationService from '../../services/configuration-service';
+import HtmlEncoderService from '../../services/html-encoder-service';
+import ConfigurationFactory from '../../factories/configuration-factory';
+import {ObfuscationConfig} from '../../model/configs/obfuscation-config';
+import './ObfuscationOutput.scss';
 
 export interface ObfuscationOutputProps {
   callbackProcessAction: any;
@@ -114,12 +115,12 @@ class ObfuscationOutput extends Component<ObfuscationOutputProps, ObfuscationOut
       <div>
         <NotificationContainer/>
         <Container>
-          <Row style={{marginTop: 5}}>
-            <Col sm={8}>
+          <Row className="element-m-spacing-t">
+            <Col sm={6}>
 
             </Col>
-            <Col sm={2}>
-              <Input type="text" placeholder="Enter config name..." value={this.state.configToSaveName}
+            <Col sm={4}>
+              <Input type="text" placeholder="Configuration name" value={this.state.configToSaveName}
                      onChange={this.updateConfigToSaveName}/>
             </Col>
             <Col sm={2}>
@@ -137,10 +138,12 @@ class ObfuscationOutput extends Component<ObfuscationOutputProps, ObfuscationOut
           </Row>
           <Row>
             <Col sm={6}>
-              <Input value={this.state.html} type="textarea" style={{height: '510px'}}
+              <Input value={this.state.html}
+                     type="textarea"
+                     className="output-textarea"
                      onChange={this.handleChange}/>
             </Col>
-            <Col sm={6} style={{wordWrap: 'break-word', whiteSpace: 'pre-wrap'}}>
+            <Col sm={6} className="output-text">
               {this.state.result}
             </Col>
           </Row>
