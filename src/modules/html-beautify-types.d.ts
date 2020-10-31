@@ -1,5 +1,5 @@
-declare module 'html-beautify'{
-    let htmlBeautify:any;
+declare module 'html-beautify' {
+  let htmlBeautify: any;
 
-    export default htmlBeautify;
+  export default htmlBeautify;
 }

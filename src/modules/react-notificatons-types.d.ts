@@ -1,7 +1,6 @@
-declare module 'react-notifications'
-{
-    let NotificationContainer: any;
-    let NotificationManager: any;
+declare module 'react-notifications' {
+  let NotificationContainer: any;
+  let NotificationManager: any;
 
-    export {NotificationContainer,NotificationManager}
+  export {NotificationContainer, NotificationManager}
 }

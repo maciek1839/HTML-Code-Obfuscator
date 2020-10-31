@@ -1,7 +1,6 @@
-import { saveConfig } from "../services/preserved-configuration.service";
+import ConfigurationService from '../services/configuration-service';
 
-
-export function saveConfigReducer(prevState:any, userConfig:any) {
-    saveConfig(userConfig);
-    return prevState;
+export function saveConfigReducer(prevState: any, userConfig: any) {
+  ConfigurationService.saveConfig(userConfig);
+  return prevState;
 }

@@ -1,49 +1,52 @@
-import { getOpeningTag, getClosingTag, generateQuizForm, getRandomImage, getRandomParagraph, getRandomHeader, getRandomBlockQuote, randomCount } from "../utils/html-generator-factory";
+import HtmlGeneratorFactory from './html-generator-factory';
 
-export interface HtmlConfig{
-    'section'?:number;
-    'header': number;
-    'paragraph': number;
-    'input': number;
+export interface HtmlConfig {
+  header: number;
+  input: number;
+  paragraph: number;
+  section?: number;
 }
 
-export function prepareHtmlConfig(
-    sectionCount:number,
-    headerCount:number,
-    paragraphCount:number,
-    inputCount:number):HtmlConfig {
-    return {
-        'section': sectionCount,
-        'header': headerCount,
-        'paragraph': paragraphCount,
-        'input': inputCount
-    };
-}
+export default class HtmlGeneratorService {
+  private static readonly htmlFactory: HtmlGeneratorFactory = new HtmlGeneratorFactory();
 
-export function generateHTML(config:HtmlConfig) {
-    let result = getOpeningTag();
-    let sectionNumber:any = config.section;
+  static generateHTML(config: HtmlConfig) {
+    let result = this.htmlFactory.getOpeningTag();
+    let sectionNumber: any = config.section;
     for (; sectionNumber > 0; sectionNumber--) {
-        let sectionResult = generateSection(config);
-        result += sectionResult.html;
-        config = sectionResult.config;
+      let sectionResult = this.generateSection(config);
+      result += sectionResult.html;
+      config = sectionResult.config;
     }
-    result += getClosingTag();
+    result += this.htmlFactory.getClosingTag();
 
     return result;
-}
+  }
 
-function generateSection(config:HtmlConfig) {
+  static prepareHtmlConfig(
+    sectionCount: number,
+    headerCount: number,
+    paragraphCount: number,
+    inputCount: number): HtmlConfig {
+    return {
+      section: sectionCount,
+      header: headerCount,
+      paragraph: paragraphCount,
+      input: inputCount
+    };
+  }
+
+  private static generateSection(config: HtmlConfig) {
     const limit = 3;
-    let updatedConfig:HtmlConfig;
-    let headerCount:any = randomCount() % limit + 1;
-    let paragraphCount:any = randomCount() % limit + 1;
-    let inputCount:any = randomCount() % limit + 1;
+    let updatedConfig: HtmlConfig;
+    let headerCount: any = this.htmlFactory.randomCount() % limit + 1;
+    let paragraphCount: any = this.htmlFactory.randomCount() % limit + 1;
+    let inputCount: any = this.htmlFactory.randomCount() % limit + 1;
 
     updatedConfig = {
-        'header': config.header - headerCount,
-        'paragraph': config.paragraph - paragraphCount,
-        'input': config.input - inputCount
+      'header': config.header - headerCount,
+      'paragraph': config.paragraph - paragraphCount,
+      'input': config.input - inputCount
     };
 
     headerCount = (config.header - headerCount) < 0 ? config.header : headerCount;
@@ -55,55 +58,55 @@ function generateSection(config:HtmlConfig) {
 
     let section = "<section>";
     for (; headerCount > 0; headerCount--) {
-        isEmptySection = false;
-        let notEmpty = false;
-        section += getRandomHeader();
-        if (paragraphCount > 0) {
-            notEmpty = true;
-            let withLink = Math.random() >= 0.5;
-            paragraphCount--;
-            if (withLink) {
-                section += getRandomParagraph(true);
-            } else {
-                section += getRandomParagraph(false);
-            }
+      isEmptySection = false;
+      let notEmpty = false;
+      section += this.htmlFactory.getRandomHeader();
+      if (paragraphCount > 0) {
+        notEmpty = true;
+        let withLink = Math.random() >= 0.5;
+        paragraphCount--;
+        if (withLink) {
+          section += this.htmlFactory.getRandomParagraph(true);
+        } else {
+          section += this.htmlFactory.getRandomParagraph(false);
         }
-        if (Math.random() >= 0.5) {
-            notEmpty = true;
-            section += getRandomImage();
-        }
-        if (!notEmpty) {
-            section += getRandomBlockQuote();
-        }
+      }
+      if (Math.random() >= 0.5) {
+        notEmpty = true;
+        section += this.htmlFactory.getRandomImage();
+      }
+      if (!notEmpty) {
+        section += this.htmlFactory.getRandomBlockQuote();
+      }
     }
     if (Math.random() >= 0.5 && inputCount > 0) {
-        isEmptySection = false;
-        isQuiz = true;
-        section += generateQuizForm(inputCount);
+      isEmptySection = false;
+      isQuiz = true;
+      section += this.htmlFactory.generateQuizForm(inputCount);
     }
     for (; paragraphCount > 0; paragraphCount--) {
-        isEmptySection = false;
-        section += "</br>";
-        if (Math.random() >= 0.5) {
-            section += getRandomBlockQuote();
-        }
-        let withLink = Math.random() >= 0.5;
-        section += getRandomParagraph(withLink);
-        if (Math.random() >= 0.5) {
-            section += getRandomImage();
-        }
+      isEmptySection = false;
+      section += "</br>";
+      if (Math.random() >= 0.5) {
+        section += this.htmlFactory.getRandomBlockQuote();
+      }
+      let withLink = Math.random() >= 0.5;
+      section += this.htmlFactory.getRandomParagraph(withLink);
+      if (Math.random() >= 0.5) {
+        section += this.htmlFactory.getRandomImage();
+      }
     }
     if (!isQuiz && inputCount > 0) {
-        isEmptySection = false;
-        section += generateQuizForm(inputCount);
+      isEmptySection = false;
+      section += this.htmlFactory.generateQuizForm(inputCount);
     }
 
     if (isEmptySection) {
-        section += getRandomBlockQuote();
+      section += this.htmlFactory.getRandomBlockQuote();
     }
 
     section += "</section>";
 
-    return { "html": section, "config": updatedConfig };
+    return {html: section, config: updatedConfig};
+  }
 }
-
