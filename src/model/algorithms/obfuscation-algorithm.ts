@@ -1,11 +1,13 @@
+import {AlgorithmType} from './algorithm-type';
+
 export class ObfuscationAlgorithm {
   details: any;
   name: string;
-  value: string;
+  type: AlgorithmType;
 
-  constructor(name: string, value: string, details: any) {
+  constructor(name: string, type: AlgorithmType, details: any) {
     this.name = name;
-    this.value = value;
+    this.type = type;
     this.details = details;
   }
 }

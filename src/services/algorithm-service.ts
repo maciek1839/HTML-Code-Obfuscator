@@ -2,8 +2,8 @@ import {AlgorithmType} from '../model/algorithms/algorithm-type';
 import {ObfuscationAlgorithm} from '../model/algorithms/obfuscation-algorithm';
 
 export default class AlgorithmService {
-  static getAlgorithm(id: string): ObfuscationAlgorithm | null {
-    let result = this.getDefaultAlgorithms().filter(e => e.value === id);
+  static getAlgorithm(id: any): ObfuscationAlgorithm | null {
+    let result = this.getDefaultAlgorithms().filter(e => e.type === id);
     return result.length > 0 ? result[0] : null;
   }
 
@@ -11,7 +11,7 @@ export default class AlgorithmService {
     return [
       {
         name: 'Html to Javascript',
-        value: AlgorithmType.HTML_TO_JAVASCRIPT,
+        type: AlgorithmType.HTML_TO_JAVASCRIPT,
         details: {
           steps: [
             'Split HTML file line by line.',
@@ -21,7 +21,7 @@ export default class AlgorithmService {
       },
       {
         name: 'Html to Base64 characters',
-        value: AlgorithmType.HTML_TO_BASE64,
+        type: AlgorithmType.HTML_TO_BASE64,
         details: {
           steps: [
             'Create js function encoding characters to Base64 characters.',
@@ -32,7 +32,7 @@ export default class AlgorithmService {
       },
       {
         name: 'Html to Hex characters',
-        value: AlgorithmType.HTML_TO_HEX,
+        type: AlgorithmType.HTML_TO_HEX,
         details: {
           steps: [
             'Create js function encoding characters to Hex characters.',
@@ -43,7 +43,7 @@ export default class AlgorithmService {
       },
       {
         name: 'Html to html entities',
-        value: AlgorithmType.HTML_TO_HTML_ENTITIES,
+        type: AlgorithmType.HTML_TO_HTML_ENTITIES,
         details: {
           steps: [
             'Create js function encoding characters to html codes.',
@@ -54,7 +54,7 @@ export default class AlgorithmService {
       },
       {
         name: 'Html to escape characters (ASCII)',
-        value: AlgorithmType.HTML_ESCAPE_CHARACTERS,
+        type: AlgorithmType.HTML_ESCAPE_CHARACTERS,
         details: {
           steps: [
             'Change endcoding using escape javascript function.',
@@ -65,7 +65,7 @@ export default class AlgorithmService {
       },
       {
         name: 'Using own encoding and decoding function.',
-        value: AlgorithmType.HTML_ENCODE_WITH_OWN_FUN,
+        type: AlgorithmType.HTML_ENCODE_WITH_OWN_FUN,
         details: {
           steps: [
             'Encode HTML using own function.',

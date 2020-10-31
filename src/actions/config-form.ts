@@ -21,17 +21,10 @@ export const setHtmlFile: ((_: any) => Action) = (file: any) => {
   };
 };
 
-export const showGenerateHtmlModal: ((_: any) => Action) = () => {
-  return {
-    type: ConfigFormActions.SHOW_GENERATE_HTML_MODAL,
-    payload: null
-  };
-};
-
 export const showResult: (() => Action) = () => {
   return {
     type: ConfigFormActions.SHOW_RESULT,
-    payload: null
+    payload: undefined
   };
 };
 
@@ -41,7 +34,6 @@ export const loadConfigAction: ((_: any) => Action) = (config: any) => {
     payload: config
   };
 };
-
 
 export const ConfigFormActions = {
   SET_ALGORITHM: 'SET_ALGORITHM',

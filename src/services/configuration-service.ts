@@ -1,8 +1,8 @@
 import {ObfuscationConfig} from '../model/configs/obfuscation-config';
 import {PreservedConfiguration} from '../model/configs/preserved-configuration';
-import {AlgorithmType} from '../model/algorithms/algorithm-type';
 import {getLoadFileType} from '../model/html-types';
 import {FileName, loadTemplate} from '../utils/file-loader';
+import {AlgorithmType} from '../model/algorithms/algorithm-type';
 
 export default class ConfigurationService {
   private static readonly APP_KEY = 'HTML_OBFUSCATOR_USER_COFNIG';
@@ -56,8 +56,7 @@ export default class ConfigurationService {
   }
 
   static getDefaultConfiguration(): PreservedConfiguration[] {
-    let array = [];
-    array.push(
+    return [
       this.createPreservedConfiguration(
         'HTML entities',
         this.createConfig(
@@ -65,11 +64,7 @@ export default class ConfigurationService {
           getLoadFileType(),
           loadTemplate(FileName.EXAMPLE1)
         )
-      )
-    );
-
-
-    array.push(
+      ),
       this.createPreservedConfiguration(
         'Base64',
         this.createConfig(
@@ -78,10 +73,7 @@ export default class ConfigurationService {
           loadTemplate(FileName.EXAMPLE2)
         )
       )
-    );
-
-
-    return array;
+    ];
   }
 
   static getInitialObfuscationConfig(): ObfuscationConfig {

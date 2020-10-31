@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {ChangeEvent, Component} from "react";
 import HtmlTypes, {getLoadFileType} from '../model/html-types';
 import {loadConfigAction, setAlgorithm, setHtmlFile, setHtmlType, showResult} from '../actions/config-form';
 import {Button, Col, Collapse, Container, Form, FormGroup, Input, Label, ListGroup, ListGroupItem} from 'reactstrap';
@@ -6,37 +6,41 @@ import GenerateHtmlModal from "./generate-html-modal";
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import AlgorithmService from '../services/algorithm-service';
 import ConfigurationService from '../services/configuration-service';
+import {ObfuscationAlgorithm} from '../model/algorithms/obfuscation-algorithm';
+import {ObfuscationConfig} from '../model/configs/obfuscation-config';
 
 export interface ConfigurationFormProps {
-  algorithms: any;
+  algorithms: ObfuscationAlgorithm[];
   callbackProcessAction: any;
-  config: any;
-  showHtmlTemplateModal: any;
+  config: ObfuscationConfig;
+  showHtmlTemplateModal: boolean;
 }
 
-class ConfigurationForm extends Component<ConfigurationFormProps, any> {
+interface ConfigurationFormState {
+  showAlgorithmDetails: boolean
+}
 
+class ConfigurationForm extends Component<ConfigurationFormProps, ConfigurationFormState> {
 
   constructor(props: ConfigurationFormProps) {
     super(props);
     this.state = {
-      showAlgorithmDetails: false,
-
+      showAlgorithmDetails: false
     };
   }
 
-  handleChangeAlgorithms = (event: any) => {
+  handleChangeAlgorithms = (event: ChangeEvent<HTMLInputElement>) => {
     let newChosenAlgorithm = event.target.value;
     this.props.callbackProcessAction(setAlgorithm(newChosenAlgorithm));
   };
 
-  handleChangeHtmlType = (event: any) => {
+  handleChangeHtmlType = (event: ChangeEvent<HTMLInputElement>) => {
     let newHtmlType = event.target.value;
     this.props.callbackProcessAction(setHtmlType(newHtmlType));
   };
 
-  handleLoadConfig = (event: any) => {
-    if (event.target.value) {
+  handleLoadConfig = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.trim().length>0) {
       let preservedConfig = JSON.parse(event.target.value);
       this.props.callbackProcessAction(loadConfigAction(preservedConfig.config));
       NotificationManager.success('Successfully load config!', preservedConfig.name);
@@ -47,7 +51,7 @@ class ConfigurationForm extends Component<ConfigurationFormProps, any> {
     this.props.callbackProcessAction(showResult());
   };
 
-  handleUserFile = (event: any) => {
+  handleUserFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     let file = event.target.files[0];
     let reader = new FileReader();
     reader.onload = (evt: any) => {
@@ -64,39 +68,48 @@ class ConfigurationForm extends Component<ConfigurationFormProps, any> {
 
   render() {
     let config = this.props.config;
-    let selectedAlgorithm = config.choosenAlgorithm ? config.choosenAlgorithm : 0;
-    let algorithmDetails = AlgorithmService.getAlgorithm(selectedAlgorithm);
-    let selectedHtml = config.choosenHtml != null ? parseInt(config.choosenHtml) : 0;
-    let isDisabledSubmit = !(config && selectedAlgorithm && selectedHtml != null && config.html);
+    let selectedAlgorithmInputIndex = config.chosenAlgorithm ? config.chosenAlgorithm.type : 0;
+    let algorithmDetails = AlgorithmService.getAlgorithm(selectedAlgorithmInputIndex);
+    let selectedHtml = config.chosenHtml != null ? parseInt(config.chosenHtml) : 0;
+    let isDisabledSubmit = !(config && selectedAlgorithmInputIndex && selectedHtml != null && config.html);
     return (
       <Container>
         <NotificationContainer/>
         <GenerateHtmlModal
           showHtmlTemplateModal={this.props.showHtmlTemplateModal}
-          callbackProcessAction={(e: any) => this.props.callbackProcessAction(e)}>
+          callbackProcessAction={this.props.callbackProcessAction}>
         </GenerateHtmlModal>
-        <Form>
-          <FormGroup row></FormGroup>
+        <Form className="element-m-spacing-t">
           <FormGroup row>
-
             <Col sm={9}>
               Load configuration
             </Col>
             <Col sm={3}>
               <Input type="select" onChange={this.handleLoadConfig}>
-                {this.renderConfigurations()}
+                <option key={0} value={null}>&nbsp;</option>
+                <option key={1} value={null} disabled={true}>default</option>
+                {
+                  ConfigurationService.getDefaultConfiguration().map(elem =>
+                    <option key={elem.name} value={JSON.stringify(elem)}>{elem.name}</option>
+                  )
+                }
+                <option key={2} value={null} disabled={true}>saved</option>
+                {
+                  ConfigurationService.getConfigs().map(elem=>
+                    <option key={elem.name} value={JSON.stringify(elem)}>{elem.name}</option>
+                  )
+                }
               </Input>
             </Col>
           </FormGroup>
-          <FormGroup row></FormGroup>
-          <FormGroup row>
+          <FormGroup row className="element-m-spacing-t">
             <Label sm={2}>Algorithm</Label>
             <Col sm={10}>
-              <Input value={selectedAlgorithm} type="select" name="select"
+              <Input value={selectedAlgorithmInputIndex} type="select" name="select"
                      onChange={this.handleChangeAlgorithms}>
-                <option key={0} value={null}></option>
+                <option key={0} value={null}>&nbsp;</option>
                 {this.props.algorithms.map((item: any) =>
-                  <option key={item.value} value={item.value}>{item.name}</option>
+                  <option key={item.type} value={item.type}>{item.name}</option>
                 )}
               </Input>
             </Col>
@@ -120,7 +133,7 @@ class ConfigurationForm extends Component<ConfigurationFormProps, any> {
             <Col sm={10}>
               <Input value={selectedHtml} type="select" name="select"
                      onChange={this.handleChangeHtmlType}>
-                <option key={0} value={null}></option>
+                <option key={0} value={null}>&nbsp;</option>
                 {this.renderHtmlTypesList()}
               </Input>
             </Col>
@@ -140,21 +153,6 @@ class ConfigurationForm extends Component<ConfigurationFormProps, any> {
       </Container>
     );
   }
-
-  renderConfigurations = () => {
-    let elements = [];
-    elements.push(<option key={0} value={null}>&nbsp;</option>);
-    elements.push(<option key={1} value={null} disabled={true}>default</option>);
-    ConfigurationService.getDefaultConfiguration().forEach(elem => {
-      elements.push(<option key={elem.name} value={JSON.stringify(elem)}>{elem.name}</option>)
-    });
-    elements.push(<option key={2} value={null} disabled={true}>saved</option>);
-    ConfigurationService.getConfigs().forEach((elem: any) => {
-      elements.push(<option key={elem.name} value={JSON.stringify(elem)}>{elem.name}</option>)
-    });
-
-    return elements;
-  };
 
   renderHtmlTypesList = () => {
     const list = [];

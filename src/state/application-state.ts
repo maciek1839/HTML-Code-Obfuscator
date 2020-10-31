@@ -7,7 +7,7 @@ export interface ApplicationState {
   activeTab: string,
   algorithms: ObfuscationAlgorithm[],
   obfuscationConfig: ObfuscationConfig,
-  outputObfuscationConfig: ObfuscationConfig | null
+  outputObfuscationConfig?: ObfuscationConfig
   showHtmlTemplateModal: boolean,
 }
 

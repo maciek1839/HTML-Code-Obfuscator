@@ -3,7 +3,7 @@ import {Action} from "./action";
 export const closeModal: (() => Action) = () => {
   return {
     type: GenerateHtmlModalActions.CLOSE_MODAL,
-    payload: null
+    payload: undefined
   };
 };
 
