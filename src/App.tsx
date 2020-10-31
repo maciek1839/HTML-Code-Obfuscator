@@ -6,23 +6,10 @@ import ConfigurationForm from "./components/config-form/config-form";
 import HTMLPreview from "./components/html-preview/html-preview";
 import SettingsTab from "./components/settings-tab";
 import ObfuscationOutput from "./components/obfuscation-output/obfuscation-output";
-import {
-  algorithmReducer,
-  htmlFileTypeReducer,
-  htmlTypeFileReducer,
-  loadConfigReducer,
-  showResultReducer
-} from "./reducers/config-form-reducer";
 import {ApplicationState, AppProps, getInitialState} from "./state/application-state"
-import {ConfigFormActions} from "./actions/config-form"
-import {GenerateHtmlModalActions} from "./actions/generate-html-modal-action";
-import {closeModalReducer, generateHtmlReducer} from './reducers/generate-html-modal';
-import {PreviewHtmlActions} from './actions/html-preview-actions';
-import {regenerateHtmlReducer} from './reducers/preview-html-reducer';
-import {ObfuscationOutputActions} from './actions/obfuscation-output-actions';
-import {saveConfigReducer} from './reducers/obfuscation-output-reducer';
 import {Action} from "./actions/action";
 import packageJson from '../package.json';
+import GlobalReducer from './reducers/global-reducer';
 
 class App extends Component<AppProps, ApplicationState> {
 
@@ -35,48 +22,8 @@ class App extends Component<AppProps, ApplicationState> {
     console.log(`Program version: ${packageJson.version}`);
   }
 
-  myGlobalReducer(action: Action) {
-    let newState = null;
-    switch (action.type) {
-      case ConfigFormActions.SET_ALGORITHM:
-        newState = algorithmReducer(this.state, action.payload);
-        this.setState(newState);
-        break;
-      case ConfigFormActions.SET_HTML_TYPE:
-        newState = htmlFileTypeReducer(this.state, action.payload);
-        this.setState(newState);
-        break;
-      case ConfigFormActions.SET_HTML_FILE:
-        newState = htmlTypeFileReducer(this.state, action.payload);
-        this.setState(newState);
-        break;
-      case GenerateHtmlModalActions.CLOSE_MODAL:
-        newState = closeModalReducer(this.state, action.payload);
-        this.setState(newState);
-        break;
-      case GenerateHtmlModalActions.GENERATE_HTML:
-        newState = generateHtmlReducer(this.state, action.payload);
-        this.setState(newState);
-        break;
-      case ConfigFormActions.SHOW_RESULT:
-        newState = showResultReducer(this.state);
-        this.setState(newState);
-        break;
-      case PreviewHtmlActions.REGENERATE_HTML:
-        newState = regenerateHtmlReducer(this.state, action.payload);
-        this.setState(newState);
-        break;
-      case ObfuscationOutputActions.SAVE_CONFIG:
-        newState = saveConfigReducer(this.state, action.payload);
-        this.setState(newState);
-        break;
-      case ConfigFormActions.LOAD_CONFIG:
-        newState = loadConfigReducer(this.state, action.payload);
-        this.setState(newState);
-        break;
-      default:
-        console.log(`No action type ${action.type} implemented!`);
-    }
+  reduceAction(action: Action) {
+    this.setState(GlobalReducer.reduce(this.state, action));
   }
 
   render() {
@@ -141,7 +88,7 @@ class App extends Component<AppProps, ApplicationState> {
                     algorithms={this.state.algorithms}
                     config={this.state.obfuscationConfig}
                     showHtmlTemplateModal={this.state.showHtmlTemplateModal}
-                    callbackProcessAction={(e: any) => this.myGlobalReducer(e)}
+                    callbackProcessAction={(e: any) => this.reduceAction(e)}
                   />
                 </Col>
               </Row>
@@ -151,7 +98,7 @@ class App extends Component<AppProps, ApplicationState> {
                 <Col>
                   <HTMLPreview
                     previewHtml={this.state.obfuscationConfig.html}
-                    callbackProcessAction={(e: any) => this.myGlobalReducer(e)}
+                    callbackProcessAction={(e: any) => this.reduceAction(e)}
                     htmlConfig={this.state.obfuscationConfig.htmlConfig}
                   />
                 </Col>
@@ -162,7 +109,7 @@ class App extends Component<AppProps, ApplicationState> {
                 <Col>
                   <ObfuscationOutput
                     config={this.state.outputObfuscationConfig}
-                    callbackProcessAction={(e: any) => this.myGlobalReducer(e)}
+                    callbackProcessAction={(e: any) => this.reduceAction(e)}
                   />
                 </Col>
               </Row>
