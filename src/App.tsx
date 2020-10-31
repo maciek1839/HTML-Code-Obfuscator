@@ -16,12 +16,17 @@ import {regenerateHtmlReducer} from './reducers/preview-html-reducer';
 import {ObfuscationOutputActions} from './actions/obfuscation-output-actions';
 import {saveConfigReducer} from './reducers/obfuscation-output-reducer';
 import {Action} from "./actions/action";
+import packageJson from '../package.json';
 
 class App extends Component<AppProps, ApplicationState> {
 
   constructor(props: AppProps) {
     super(props);
     this.state = getInitialState();
+  }
+
+  componentDidMount() {
+    console.log(`Program version: ${packageJson.version}`);
   }
 
   myGlobalReducer(action: Action) {
